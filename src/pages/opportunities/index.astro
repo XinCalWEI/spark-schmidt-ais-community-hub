@@ -1,0 +1,24 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import CollectionFilter from '../../components/CollectionFilter.astro';
+import EmptyState from '../../components/EmptyState.astro';
+import Icon from '../../components/Icon.astro';
+import OpportunityCard from '../../components/OpportunityCard.astro';
+import PageHero from '../../components/PageHero.astro';
+import { withBase } from '../../lib/urls';
+
+const entries = (await getCollection('opportunities', ({ data }) => !data.draft && data.status !== 'expired')).sort((a,b) => (a.data.deadline?.getTime() ?? Infinity) - (b.data.deadline?.getTime() ?? Infinity));
+const typeOptions = [...new Set(entries.map(e => e.data.type))].sort().map(value => ({value,label:value.replace('-',' ')}));
+const statusOptions = [...new Set(entries.map(e => e.data.status))].sort().map(value => ({value,label:value.replace('-',' ')}));
+---
+
+<BaseLayout title="Opportunities" description="Reviewed fellowships, grants, jobs, events, and collaboration opportunities for the AI in Science community.">
+  <PageHero eyebrow="Community hub" title="Opportunities worth acting on." description="A reviewed board for fellowships, grants, jobs, events, challenges, and collaboration calls relevant to the broader AI in Science community." compact>
+    <div slot="actions" class="page-actions"><a class="button button-gold" href={withBase('opportunities/submit/')}>Suggest an opportunity <Icon name="arrow-right" size={18}/></a></div>
+  </PageHero>
+  <section class="section section-white"><div class="container collection-browser" data-collection-browser>
+    {entries.length > 0 ? <><CollectionFilter count={entries.length} searchPlaceholder="Search opportunities and organizations" filters={[{key:'type',label:'Type',options:typeOptions},{key:'status',label:'Status',options:statusOptions}]}/><div class="card-grid">{entries.map(entry=><OpportunityCard entry={entry}/>)}</div><div data-filter-empty hidden><EmptyState title="No opportunities match those filters." description="Try another keyword or clear the selected filters." icon="search"/></div></> : <EmptyState title="The opportunity board is coming online." description="New opportunities will be added after the community submission and review process is ready. We will show an official source, deadline, and last-verified date for every listing." icon="calendar"><a class="button button-primary" href={withBase('opportunities/submit/')}>Learn how to suggest one</a></EmptyState>}
+  </div></section>
+  <section class="section"><div class="narrow notice"><Icon name="check" size={21}/><p><strong>Always verify before acting.</strong> This hub summarizes external opportunities for convenience. Eligibility, deadlines, terms, and application instructions are controlled by the original organization and may change.</p></div></section>
+</BaseLayout>

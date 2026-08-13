@@ -1,0 +1,421 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import CTASection from '../../components/CTASection.astro';
+import Icon from '../../components/Icon.astro';
+import PageHero from '../../components/PageHero.astro';
+import SectionHeading from '../../components/SectionHeading.astro';
+import {
+  fundingProgram,
+  forumFacts,
+  websiteCreator,
+} from '../../data/site';
+import { organizingTeam } from '../../data/team';
+import { withBase } from '../../lib/urls';
+import midasLogo from '../../assets/brand/midas.png';
+import schmidtSciencesLogo from '../../assets/brand/schmidt-sciences.png';
+
+const schmidtSciencesUrl = 'https://www.schmidtsciences.org/';
+const midasUrl = 'https://midas.umich.edu/';
+
+const principles = [
+  ['Responsibility from the start', 'Ethics, participation, accountability, and stakeholder values belong throughout the research lifecycle.'],
+  ['Translation through collaboration', 'Strong pathways to impact are co-designed with the people and institutions involved.'],
+  ['Open and reproducible practice', 'Research outputs should be understandable, maintainable, and shareable whenever possible.'],
+  ['Accessible technical depth', 'People with different backgrounds should be able to contribute meaningfully and continue learning.'],
+  ['Relationships that last', 'Community-building is an essential research capability, not an optional social activity.'],
+];
+
+const forumJourney = [
+  ['Day 1', 'Frame real-world impact'],
+  ['Day 2', 'Explore emerging methods'],
+  ['Day 3', 'Build practical skills'],
+  ['Day 4', 'Prototype together'],
+  ['Day 5', 'Share & continue'],
+];
+
+const specialThanksGroups = [
+  {
+    title: 'AI in Science Fellowship Program at Schmidt Sciences',
+    organization: 'Schmidt Sciences',
+    websiteUrl: schmidtSciencesUrl,
+    logo: schmidtSciencesLogo,
+    logoVariant: 'schmidt',
+    people: [
+      { name: 'Minjoon Kouh', profileUrl: 'https://www.schmidtsciences.org/person/minjoon-kouh/' },
+      { name: 'Brittany Aguilar', profileUrl: 'https://www.schmidtsciences.org/person/brittany-aguilar/' },
+      { name: 'Stephanie Kenealy', profileUrl: 'https://www.schmidtsciences.org/person/stephanie-kenealy/' },
+      { name: 'Tina Dang', profileUrl: 'https://www.schmidtsciences.org/person/mike-belinsky-copy-copy/' },
+    ],
+  },
+  {
+    title: 'Michigan Institute for Data & AI in Society (MIDAS) team',
+    organization: 'Michigan Institute for Data & AI in Society',
+    websiteUrl: midasUrl,
+    logo: midasLogo,
+    logoVariant: 'midas',
+    people: [
+      { name: 'Jing Liu', profileUrl: 'https://midas.umich.edu/directory/jing-liu/' },
+      { name: 'Do-Hee Morsman', profileUrl: 'https://midas.umich.edu/directory/do-hee-morsman/' },
+      { name: 'Tim Cavnar', profileUrl: 'https://midas.umich.edu/directory/tim-cavnar/' },
+      { name: 'Janet Gribbons', profileUrl: 'https://midas.umich.edu/directory/janet-gribbons/' },
+      { name: 'Beatrice Hahn', profileUrl: 'https://midas.umich.edu/directory/beatrice-hahn/' },
+    ],
+  },
+];
+---
+
+<BaseLayout title="About" description="About the SPARK Community Hub, its funding, organizing team, mission, and community-led approach." pageClass="about-page">
+  <PageHero
+    eyebrow="About SPARK"
+    title="What does it take to move AI research beyond the paper?"
+    description="SPARK is a Fellow-led forum and community hub. It brings current and alumni Schmidt AI in Science Fellows together to build practical skills, test ideas through small-group projects, and begin working with cross-sector collaborators earlier in the research process."
+    compact
+  >
+    <aside slot="aside" class="hero-funding-card" aria-labelledby="hero-funding-title">
+      <div class="hero-funding-identity">
+        <div class="funding-logo">
+          <a href={schmidtSciencesUrl} target="_blank" rel="noopener noreferrer" aria-label="Visit the Schmidt Sciences website (opens in a new tab)">
+            <Image src={schmidtSciencesLogo} alt="" width={220} loading="eager" />
+          </a>
+        </div>
+        <p class="funding-eyebrow">Funding acknowledgement</p>
+        <h2 id="hero-funding-title">{fundingProgram}</h2>
+      </div>
+      <div class="funding-conveners">
+        <p>Initiated by</p>
+        <ul aria-label="SPARK conveners">
+          {organizingTeam.map((member) => <li class="convener-name">{member.name}</li>)}
+        </ul>
+        <a class="button button-primary button-full hero-convener-link" href="#people-behind-spark">
+          Learn more about the conveners <Icon name="arrow-right" size={17} />
+        </a>
+      </div>
+    </aside>
+  </PageHero>
+
+  <section class="section section-white">
+    <div class="container about-intro">
+      <SectionHeading
+        eyebrow="Our mission"
+        title="Move AI-enabled science toward responsible, reproducible, and useful outcomes."
+        description="SPARK combines a retreat-style forum with a public resource hub supporting research translation, practical skills, cross-sector collaboration, mentorship, and sustained community connection."
+      />
+      <div class="prose">
+        <p>The initiative welcomes scientific diversity. It is not centered on one discipline, one AI method, or one career path. Instead, it creates a shared environment in which participants can learn from one another and connect technical research with societal needs.</p>
+        <p>The public hub is designed to remain useful beyond a single event: preserving selected learning resources and project outputs, sharing community perspectives, and helping Fellows and alumni discover future opportunities and activities.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="forum-feature-section" aria-labelledby="forum-feature-title">
+    <div class="container forum-feature-panel">
+      <div class="forum-feature-masthead">
+        <p class="eyebrow eyebrow-light"><span aria-hidden="true"></span>Forum 2026</p>
+        <span class="forum-planning-status"><span aria-hidden="true"></span>Planning in progress</span>
+        <h2 id="forum-feature-title">{forumFacts.subtitle}</h2>
+      </div>
+      <div class="forum-feature-overview">
+        <p>SPARK will bring current and alumni Schmidt AI in Science Fellows together with cross-sector collaborators to explore how research moves into practice—through shared problem framing, emerging AI methods, hands-on skills, small-group projects, mentorship, and reflection.</p>
+        <div class="forum-feature-actions">
+          <a class="button button-gold" href={withBase('forum/2026/')}>Explore Forum 2026 <Icon name="arrow-right" size={18} /></a>
+          <a class="button button-outline-light" href={withBase('forum/2026/program/')}>Preview the program</a>
+        </div>
+      </div>
+
+      <dl class="forum-feature-facts">
+        <div><dt>Location</dt><dd>{forumFacts.locationLabel}</dd></div>
+        <div><dt>Planning window</dt><dd>{forumFacts.dateLabel}</dd></div>
+        <div><dt>Status</dt><dd>Program in development</dd></div>
+      </dl>
+
+      <div class="forum-feature-journey" aria-labelledby="forum-journey-title">
+        <div class="forum-journey-heading">
+          <div>
+            <p>Program arc · Preview</p>
+            <h3 id="forum-journey-title">From welcome and connection to work that can continue.</h3>
+          </div>
+          <span>Schedule details remain in development.</span>
+        </div>
+        <div class="forum-journey-flow">
+          <aside class="forum-arrival">
+            <span>Arrival evening</span>
+            <strong>Welcome & connect</strong>
+            <small>Settle in and meet the community.</small>
+          </aside>
+          <ol aria-label="Forum program arc, days 1 through 5">
+            {forumJourney.map(([day, focus], index) => (
+              <li><span aria-hidden="true">{String(index + 1).padStart(2, '0')}</span><small>{day}</small><strong>{focus}</strong></li>
+            ))}
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-white">
+    <div class="container">
+      <SectionHeading
+        id="people-behind-spark"
+        eyebrow="The people behind SPARK"
+        title="Meet the six Fellows and alumni leading the SPARK Forum."
+        description="We conceived SPARK and are bringing it to life—shaping the Forum's program, partnerships, participant experience, collaborative projects, and long-term community resources."
+      />
+      <div class="about-team-grid">
+        {organizingTeam.map((member) => (
+          <article>
+            <Image
+              class="team-photo"
+              src={member.photo}
+              alt={`Portrait of ${member.name}`}
+              width={192}
+              height={192}
+              fit="cover"
+              position={member.photoPosition}
+              loading="lazy"
+            />
+            <div>
+              <h3><a href={member.profileUrl} target="_blank" rel="noopener noreferrer">{member.name}<Icon name="external" size={14} /></a></h3>
+              <strong>{member.role}</strong>
+              <p class="team-affiliation">{member.affiliation}</p>
+              <p class="team-focus">{member.focus}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+      <a class="button button-primary team-link" href={withBase('about/team/')}>Meet the full organizing team <Icon name="arrow-right" size={18} /></a>
+
+      <section class="special-thanks" aria-labelledby="special-thanks-title">
+        <div class="special-thanks-intro">
+          <p class="eyebrow"><span aria-hidden="true"></span>Special thanks</p>
+          <h3 id="special-thanks-title">This work would not be possible without their support.</h3>
+          <p>We are grateful for the guidance, coordination, and practical help of colleagues across Schmidt Sciences and MIDAS.</p>
+        </div>
+        <div class="special-thanks-groups">
+          {specialThanksGroups.map((group) => (
+            <section>
+              <a
+                class={`special-thanks-logo special-thanks-logo-${group.logoVariant}`}
+                href={group.websiteUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`Visit the ${group.organization} website (opens in a new tab)`}
+              >
+                <Image src={group.logo} alt="" width={320} loading="lazy" />
+              </a>
+              <h4>{group.title}</h4>
+              <ul>
+                {group.people.map((person) => (
+                  <li>
+                    {'profileUrl' in person && person.profileUrl
+                      ? <a href={person.profileUrl} target="_blank" rel="noopener noreferrer">{person.name}<Icon name="external" size={13} /></a>
+                      : <span>{person.name}</span>}
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ))}
+        </div>
+      </section>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionHeading eyebrow="Our principles" title="The commitments guiding the work." description="These principles shape both the Forum and the way this hub is developed and maintained." />
+      <div class="principle-list">
+        {principles.map(([title, text], index) => (
+          <article>
+            <span>{String(index + 1).padStart(2, '0')}</span>
+            <h3>{title}</h3>
+            <p>{text}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-navy">
+    <div class="container identity-grid">
+      <div>
+        <p class="eyebrow eyebrow-light"><span aria-hidden="true"></span>Community-led</p>
+        <h2>A hub built with—not merely for—the community.</h2>
+      </div>
+      <div>
+        <p>SPARK is organized by current and alumni Schmidt AI in Science Fellows.</p>
+        <p>This public hub and website were created by <a href={websiteCreator.profileUrl} target="_blank" rel="noopener noreferrer">{websiteCreator.name}</a> at {websiteCreator.affiliation} as part of the SPARK initiative.</p>
+        <div class="page-actions">
+          <a class="button button-gold" href={withBase('fellows/')}>Explore the Fellows community <Icon name="arrow-right" size={18} /></a>
+          <a class="button button-outline-light" href={withBase('about/partners/')}>Partnership approach</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-white">
+    <div class="container">
+      <CTASection eyebrow="Get involved" title="There are many ways to contribute." description="Share a useful resource, point the community toward an opportunity, suggest an event, or bring a real research-translation challenge.">
+        <a class="button button-gold" href={withBase('contribute/')}>Explore contribution paths <Icon name="arrow-right" size={18} /></a>
+      </CTASection>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .about-intro, .identity-grid { display: grid; grid-template-columns: .9fr 1.1fr; gap: clamp(3rem, 8vw, 7rem); }
+  .about-intro .section-heading { margin: 0; }
+  :global(.about-page .page-hero) { padding-block: clamp(3.6rem, 6vw, 5.5rem); }
+  :global(.about-page .page-hero-inner) { grid-template-columns: minmax(0, 1.12fr) minmax(25rem, .88fr); align-items: center; gap: clamp(2.75rem, 6vw, 5.5rem); }
+  :global(.about-page .page-hero-copy) { max-width: 690px; }
+  :global(.about-page .page-hero h1) { max-width: 14ch; font-size: clamp(2.65rem, 4.6vw, 4.3rem); line-height: 1.03; letter-spacing: -.045em; }
+  :global(.about-page .page-hero-copy > p:not(.eyebrow)) { max-width: 640px; line-height: 1.7; }
+  .hero-funding-card { position: relative; width: 100%; overflow: hidden; border: 1px solid rgba(228, 185, 73, .72); border-radius: var(--radius-lg); background: linear-gradient(155deg, #fff 20%, #f3f5f4 100%); box-shadow: 0 26px 70px rgba(2, 15, 25, .28); }
+  .hero-funding-card::before { position: absolute; top: 0; left: 1.7rem; width: 4rem; height: 4px; border-radius: 0 0 4px 4px; background: var(--gold-400); content: ''; }
+  .hero-funding-identity { padding: 1.65rem 1.7rem 1.45rem; }
+  .funding-logo { display: grid; min-height: 3.7rem; place-items: center start; border-bottom: 1px solid var(--line); padding-bottom: 1rem; }
+  .funding-logo a { display: inline-grid; min-height: 44px; place-items: center start; border-radius: .45rem; }
+  .funding-logo img { width: min(100%, 205px); height: auto; transition: opacity 160ms ease, transform 160ms ease; }
+  .funding-logo a:hover img { opacity: .82; transform: translateY(-2px); }
+  .funding-eyebrow { color: var(--gold-700); font-size: .72rem; font-weight: 850; letter-spacing: .1em; text-transform: uppercase; }
+  .hero-funding-card .funding-eyebrow { margin-top: 1.1rem; }
+  .hero-funding-card h2 { max-width: 28ch; margin-top: .42rem; color: var(--navy-950); font-size: clamp(1.16rem, 1.55vw, 1.42rem); line-height: 1.28; }
+  .funding-conveners { border-top: 1px solid var(--line); background: rgba(11, 34, 55, .035); padding: 1.25rem 1.7rem 1.5rem; }
+  .funding-conveners > p { color: var(--gold-700); font-size: .72rem; font-weight: 850; letter-spacing: .1em; text-transform: uppercase; }
+  .funding-conveners ul { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .42rem 1rem; margin-top: .8rem; list-style: none; }
+  .funding-conveners li { display: flex; min-width: 0; align-items: baseline; gap: .45rem; color: var(--navy-900); font-size: .82rem; font-weight: 750; line-height: 1.4; }
+  .funding-conveners li::before { width: .4rem; height: 2px; flex: none; background: var(--gold-500); content: ''; }
+  .hero-convener-link { margin-top: 1.15rem; }
+  :global(#people-behind-spark) { scroll-margin-top: 6rem; }
+  .forum-feature-section { background: var(--paper-deep); padding-block: clamp(2.5rem, 5vw, 4rem); }
+  .forum-feature-panel { position: relative; display: grid; overflow: hidden; border: 1px solid rgba(228, 185, 73, .5); border-radius: var(--radius-lg); background: radial-gradient(circle at 100% 0%, rgba(228, 185, 73, .13), transparent 26rem), radial-gradient(circle at 0% 100%, rgba(27, 75, 105, .55), transparent 28rem), var(--navy-900); padding: clamp(2rem, 5vw, 4rem); box-shadow: var(--shadow-md); }
+  .forum-feature-panel::after { position: absolute; right: -6rem; bottom: -8rem; width: 21rem; height: 21rem; border: 1px solid rgba(228, 185, 73, .16); border-radius: 50%; content: ''; pointer-events: none; }
+  .forum-feature-masthead { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 1rem 2rem; }
+  .forum-feature-masthead .eyebrow { grid-column: 1; }
+  .forum-feature-masthead h2 { grid-column: 1 / -1; max-width: 27ch; margin-top: .4rem; color: #fff; font-size: clamp(2.35rem, 4.4vw, 4rem); line-height: 1.03; letter-spacing: -.045em; text-wrap: balance; }
+  .forum-planning-status { display: inline-flex; min-height: 34px; align-items: center; gap: .5rem; border: 1px solid rgba(245, 223, 158, .28); border-radius: 999px; background: rgba(255, 255, 255, .055); color: #d6e1e7; padding: .38rem .75rem; font-size: .72rem; font-weight: 750; white-space: nowrap; }
+  .forum-planning-status > span { width: .45rem; height: .45rem; border-radius: 50%; background: var(--gold-400); }
+  .forum-feature-overview { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 1.35fr) auto; align-items: end; gap: 2rem; margin-top: clamp(1.6rem, 3vw, 2.4rem); }
+  .forum-feature-overview > p { max-width: 75ch; color: #c9d7de; font-size: clamp(.98rem, 1.3vw, 1.08rem); line-height: 1.75; }
+  .forum-feature-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: .65rem; }
+  .forum-feature-facts { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: clamp(1.7rem, 4vw, 2.7rem); border: 1px solid rgba(255, 255, 255, .15); border-radius: var(--radius); background: rgba(255, 255, 255, .045); }
+  .forum-feature-facts div { min-height: 86px; padding: 1.05rem 1.25rem; }
+  .forum-feature-facts div + div { border-left: 1px solid rgba(255, 255, 255, .15); }
+  .forum-feature-facts dt { color: var(--gold-200); font-size: .7rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+  .forum-feature-facts dd { margin-top: .35rem; color: #fff; font-size: .91rem; font-weight: 700; line-height: 1.4; }
+  .forum-feature-journey { position: relative; z-index: 1; margin-top: clamp(2rem, 4vw, 3.1rem); border-top: 1px solid rgba(255, 255, 255, .16); padding-top: clamp(1.5rem, 3vw, 2.2rem); }
+  .forum-journey-heading { display: flex; align-items: end; justify-content: space-between; gap: 2rem; margin-bottom: 1rem; }
+  .forum-journey-heading > div > p { color: var(--gold-200); font-size: .7rem; font-weight: 850; letter-spacing: .1em; text-transform: uppercase; }
+  .forum-journey-heading h3 { margin-top: .35rem; color: #fff; font-size: clamp(1.15rem, 2vw, 1.5rem); letter-spacing: -.02em; }
+  .forum-journey-heading > span { color: #aebfc8; font-size: .76rem; }
+  .forum-journey-flow { display: grid; grid-template-columns: minmax(10rem, .85fr) minmax(0, 4.15fr); align-items: stretch; gap: 1.25rem; }
+  .forum-arrival { display: grid; align-content: center; gap: .3rem; border: 1px solid rgba(228, 185, 73, .55); border-radius: var(--radius); background: linear-gradient(145deg, rgba(228, 185, 73, .2), rgba(228, 185, 73, .07)); padding: 1.15rem; }
+  .forum-arrival span { color: var(--gold-200); font-size: .68rem; font-weight: 850; letter-spacing: .08em; text-transform: uppercase; }
+  .forum-arrival strong { color: #fff; font-size: .93rem; }
+  .forum-arrival small { margin-top: .25rem; color: #bdcbd2; font-size: .72rem; line-height: 1.45; }
+  .forum-feature-journey ol { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); border: 1px solid rgba(255, 255, 255, .14); border-radius: var(--radius); background: rgba(255, 255, 255, .045); list-style: none; }
+  .forum-feature-journey li { position: relative; display: grid; min-height: 112px; align-content: center; gap: .25rem; padding: 1rem 1.05rem; }
+  .forum-feature-journey li + li { border-left: 1px solid rgba(255, 255, 255, .13); }
+  .forum-feature-journey li > span { display: grid; width: 1.8rem; height: 1.8rem; place-items: center; margin-bottom: .25rem; border: 1px solid rgba(228, 185, 73, .58); border-radius: 50%; color: var(--gold-200); font-size: .64rem; font-weight: 850; }
+  .forum-feature-journey li small { color: #9fb2bd; font-size: .65rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
+  .forum-feature-journey li strong { color: #fff; font-size: .82rem; line-height: 1.35; }
+  .about-team-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem; }
+  .about-team-grid article { display: grid; grid-template-columns: 8rem minmax(0, 1fr); gap: 1.5rem; align-items: start; border: 1px solid var(--line); border-radius: var(--radius); padding: 1.5rem; background: #fff; box-shadow: var(--shadow-sm); }
+  .team-photo { width: 8rem; height: 8rem; border: 3px solid var(--paper-deep); border-radius: 50%; background: var(--paper); object-fit: cover; }
+  .about-team-grid h3 { font-size: 1.25rem; line-height: 1.25; }
+  .about-team-grid h3 a { display: inline-flex; align-items: center; gap: .35rem; color: var(--navy-950); text-decoration: none; }
+  .about-team-grid h3 a:hover { color: var(--gold-700); }
+  .about-team-grid strong { display: block; margin-top: .45rem; color: var(--gold-700); font-size: .9rem; line-height: 1.4; }
+  .about-team-grid .team-affiliation { margin-top: .65rem; color: var(--slate); font-size: .9rem; line-height: 1.55; }
+  .about-team-grid .team-focus { margin-top: .6rem; color: var(--navy-800); font-size: .88rem; line-height: 1.6; }
+  .team-link { margin-top: 1.5rem; }
+  .special-thanks { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: clamp(2rem, 6vw, 4.5rem); margin-top: clamp(3rem, 6vw, 5rem); border-top: 1px solid var(--line); padding-top: clamp(2rem, 4vw, 3rem); }
+  .special-thanks-intro h3 { max-width: 20ch; margin-top: .7rem; font-size: clamp(1.35rem, 2.4vw, 1.9rem); }
+  .special-thanks-intro > p:last-child { max-width: 52ch; margin-top: .85rem; color: var(--slate); font-size: .92rem; }
+  .special-thanks-groups { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+  .special-thanks-groups > section { border: 1px solid var(--line); border-radius: var(--radius); background: var(--paper); padding: 1.35rem; }
+  .special-thanks-logo { display: flex; min-height: 5.25rem; align-items: center; justify-content: flex-start; margin-bottom: 1rem; border-bottom: 1px solid var(--line); border-radius: .4rem .4rem 0 0; padding-bottom: 1rem; text-decoration: none; }
+  .special-thanks-logo img { width: auto; max-width: 100%; height: auto; object-fit: contain; object-position: left center; transition: opacity 160ms ease, transform 160ms ease; }
+  .special-thanks-logo:hover img { opacity: .8; transform: translateY(-2px); }
+  .special-thanks-logo-schmidt img { max-height: 4.5rem; }
+  .special-thanks-logo-midas img { max-height: 2.5rem; }
+  .special-thanks-groups h4 { min-height: 2.8em; color: var(--navy-900); font-size: .88rem; line-height: 1.4; }
+  .special-thanks-groups ul { display: grid; gap: .45rem; margin-top: 1rem; list-style: none; }
+  .special-thanks-groups li { color: var(--slate); font-size: .86rem; }
+  .special-thanks-groups a { display: inline-flex; min-height: 32px; align-items: center; gap: .35rem; color: var(--navy-800); font-weight: 700; text-decoration: none; }
+  .special-thanks-groups a:hover { color: var(--gold-700); text-decoration: underline; }
+  .principle-list { display: grid; grid-template-columns: repeat(5, 1fr); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+  .principle-list article { min-height: 300px; padding: 1.25rem; }
+  .principle-list article + article { border-left: 1px solid var(--line); }
+  .principle-list span { color: #a9b5bb; font-family: var(--font-display); font-size: 2.2rem; font-weight: 750; }
+  .principle-list h3 { margin-top: 3rem; font-size: 1rem; }
+  .principle-list p { margin-top: .6rem; color: var(--slate); font-size: .8rem; }
+  .identity-grid > div:last-child > p { color: #c7d5dc; }
+  .identity-grid > div:last-child > p + p { margin-top: 1rem; }
+  .identity-grid > div:last-child a:not(.button) { color: var(--gold-200); }
+  .identity-grid h2 { margin-top: .7rem; }
+
+  @media (max-width: 1023px) {
+    :global(.about-page .page-hero-inner) { grid-template-columns: 1fr; align-items: start; gap: 2.25rem; }
+    :global(.about-page .page-hero-copy) { max-width: 760px; }
+    .hero-funding-card { width: min(100%, 700px); }
+    .about-team-grid article { grid-template-columns: 7rem minmax(0, 1fr); padding: 1.25rem; }
+    .team-photo { width: 7rem; height: 7rem; }
+    .forum-feature-overview { grid-template-columns: 1fr; align-items: start; }
+    .forum-feature-actions { justify-content: flex-start; }
+    .forum-journey-flow { grid-template-columns: 1fr; }
+    .forum-arrival { grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: .25rem 1rem; }
+    .forum-arrival span { grid-row: 1; grid-column: 1; }
+    .forum-arrival strong { grid-row: 2; grid-column: 1; }
+    .forum-arrival small { grid-row: 1 / span 2; grid-column: 2; margin: 0; }
+    .forum-feature-journey ol { position: relative; grid-template-columns: 1fr; border: 0; background: transparent; }
+    .forum-feature-journey ol::before { position: absolute; top: 1.3rem; bottom: 1.3rem; left: 1.14rem; width: 1px; background: rgba(228, 185, 73, .35); content: ''; }
+    .forum-feature-journey li { grid-template-columns: 2.3rem minmax(0, 1fr); min-height: 72px; align-content: center; gap: .05rem .8rem; border: 0; padding: .65rem 0; }
+    .forum-feature-journey li + li { border-top: 1px solid rgba(255, 255, 255, .12); border-left: 0; }
+    .forum-feature-journey li > span { z-index: 1; grid-row: 1 / span 2; grid-column: 1; align-self: center; margin: 0; background: var(--navy-900); }
+    .forum-feature-journey li small, .forum-feature-journey li strong { grid-column: 2; }
+    .principle-list { grid-template-columns: 1fr 1fr; }
+    .principle-list article + article { border-left: 0; border-top: 1px solid var(--line); }
+    .principle-list article:nth-child(even) { border-left: 1px solid var(--line); }
+  }
+
+  @media (max-width: 820px) {
+    .about-team-grid, .special-thanks { grid-template-columns: 1fr; }
+  }
+
+  @media (max-width: 760px) {
+    .about-intro, .identity-grid, .principle-list, .about-team-grid { grid-template-columns: 1fr; }
+    :global(.about-page .page-hero) { padding-block: 3.25rem; }
+    :global(.about-page .page-hero-inner) { gap: 1.8rem; }
+    :global(.about-page .page-hero h1) { max-width: none; font-size: clamp(2.35rem, 11vw, 3.25rem); }
+    .hero-funding-card { width: 100%; min-width: 0; }
+    .hero-funding-identity { padding: 1.4rem 1.25rem 1.2rem; }
+    .funding-conveners { padding: 1.1rem 1.25rem 1.3rem; }
+    .funding-conveners ul { gap: .4rem .7rem; }
+    .funding-conveners li { font-size: .78rem; }
+    :global(#people-behind-spark) { scroll-margin-top: 5.25rem; }
+    .forum-feature-section { padding-block: 1.25rem; }
+    .forum-feature-panel { padding: 1.35rem; }
+    .forum-feature-masthead { grid-template-columns: 1fr; align-items: start; }
+    .forum-feature-masthead .eyebrow, .forum-feature-masthead h2 { grid-column: 1; }
+    .forum-feature-masthead h2 { margin-top: .2rem; font-size: clamp(2rem, 8.8vw, 2.3rem); line-height: 1.04; }
+    .forum-planning-status { grid-row: 2; width: fit-content; }
+    .forum-feature-overview { gap: 1.25rem; margin-top: 1.3rem; }
+    .forum-feature-overview > p { font-size: .94rem; }
+    .forum-feature-actions { display: grid; grid-template-columns: 1fr; width: 100%; }
+    .forum-feature-actions .button { width: 100%; }
+    .forum-feature-facts { grid-template-columns: 1fr; }
+    .forum-feature-facts div { min-height: 0; padding: .9rem 1rem; }
+    .forum-feature-facts div + div { border-top: 1px solid rgba(255, 255, 255, .16); border-left: 0; }
+    .forum-journey-heading { align-items: flex-start; flex-direction: column; gap: .35rem; }
+    .forum-arrival { grid-template-columns: 1fr; }
+    .forum-arrival span, .forum-arrival strong, .forum-arrival small { grid-row: auto; grid-column: 1; }
+    .forum-arrival small { margin-top: .2rem; }
+    .principle-list article { min-height: 0; }
+    .principle-list article:nth-child(even) { border-left: 0; }
+    .principle-list h3 { margin-top: 1.5rem; }
+    .about-team-grid article { grid-template-columns: 6rem minmax(0, 1fr); gap: 1rem; }
+    .team-photo { width: 6rem; height: 6rem; }
+    .special-thanks-groups { grid-template-columns: 1fr; }
+    .special-thanks-groups h4 { min-height: 0; }
+  }
+</style>

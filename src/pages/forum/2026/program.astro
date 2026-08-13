@@ -1,0 +1,127 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import CTASection from '../../../components/CTASection.astro';
+import ForumSubnav from '../../../components/ForumSubnav.astro';
+import Icon from '../../../components/Icon.astro';
+import PageHero from '../../../components/PageHero.astro';
+import ProgramDayDialog from '../../../components/ProgramDayDialog.astro';
+import StatusBadge from '../../../components/StatusBadge.astro';
+import { withBase } from '../../../lib/urls';
+
+const sessions = (await getCollection('sessions', ({ data }) => !data.draft)).sort((a,b) => a.data.order - b.data.order);
+const dayNames: Record<number,string> = {0:'Arrival evening',1:'Frame',2:'Explore',3:'Build skills',4:'Prototype',5:'Reflect'};
+---
+
+<BaseLayout title="Program Preview — Forum 2026" description="Illustrative program structure for the SPARK Forum 2026.">
+  <PageHero eyebrow="Forum 2026 · Program" title="A connected journey from framing to action." description="This illustrative structure shows the intended learning arc. Topics, timing, session formats, and sequence remain subject to change." status="illustrative" compact />
+  <ForumSubnav />
+  <section class="section section-white">
+    <div class="container">
+      <div class="notice"><Icon name="spark" size={21}/><p><strong>Working program preview.</strong> Select <em>View day details</em> for the current time-by-time plan. No session time, contributor, or room is confirmed unless explicitly labeled otherwise. The final agenda will be published in accessible HTML; any downloadable PDF will be supplementary.</p></div>
+      <div class="agenda mt-3">
+        {sessions.map((session, index) => (
+          <article class="agenda-day" id={`day-${session.data.day}`}>
+            <h2 class="agenda-label"><span class="agenda-day-number">{session.data.day === 0 ? 'Arrival evening' : `Day ${session.data.day}`}</span>{session.data.day !== 0 && <span class="agenda-day-name">{dayNames[session.data.day]}</span>}</h2>
+            <div class="agenda-session">
+              <span class="agenda-number">{String(index + 1).padStart(2,'0')}</span>
+              <div>
+                <div class="agenda-title-row">
+                  <h3>{session.data.title}</h3>
+                  <button
+                    class="button button-outline button-small agenda-details-button"
+                    type="button"
+                    hidden
+                    aria-haspopup="dialog"
+                    aria-controls={`program-day-${session.id}`}
+                    data-program-dialog-open={`program-day-${session.id}`}
+                  >
+                    View day details
+                    <span class="sr-only"> for {session.data.day === 0 ? 'arrival evening' : `Day ${session.data.day}`}: {session.data.title}</span>
+                    <Icon name="arrow-right" size={17} />
+                  </button>
+                </div>
+                <p>{session.data.summary}</p>
+                <div class="agenda-meta"><StatusBadge status={session.data.status}/><span class="tag">{session.data.format.replace('-', ' ')}</span>{session.data.tags.map(tag => <span class="tag">{tag}</span>)}</div>
+              </div>
+            </div>
+            <ProgramDayDialog session={session} dialogId={`program-day-${session.id}`} />
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+  <section class="section"><div class="container"><CTASection eyebrow="Help us prepare" title="Different backgrounds are part of the design." description="A future pre-event survey will help the organizing team understand participants' technical experience, interests, learning goals, and access needs."><a class="button button-gold" href={withBase('forum/2026/participate/')}>Participation updates <Icon name="arrow-right" size={18}/></a></CTASection></div></section>
+</BaseLayout>
+
+<script>
+  const supportsModalDialog =
+    typeof HTMLDialogElement !== 'undefined' &&
+    typeof HTMLDialogElement.prototype.showModal === 'function';
+
+  if (supportsModalDialog) {
+    const returnFocus = new WeakMap<HTMLDialogElement, HTMLElement>();
+
+    document.querySelectorAll<HTMLButtonElement>('[data-program-dialog-open]').forEach((trigger) => {
+      trigger.hidden = false;
+      trigger.addEventListener('click', () => {
+        const dialogId = trigger.dataset.programDialogOpen;
+        const dialog = dialogId ? document.getElementById(dialogId) : null;
+        if (!(dialog instanceof HTMLDialogElement)) return;
+
+        returnFocus.set(dialog, trigger);
+        dialog.showModal();
+        document.body.classList.add('program-dialog-open');
+        requestAnimationFrame(() => dialog.querySelector<HTMLElement>('[data-dialog-title]')?.focus());
+      });
+    });
+
+    document.querySelectorAll<HTMLDialogElement>('[data-program-dialog]').forEach((dialog) => {
+      let pointerStartedOnBackdrop = false;
+
+      dialog.addEventListener('pointerdown', (event) => {
+        pointerStartedOnBackdrop = event.target === dialog;
+      });
+
+      dialog.addEventListener('pointerup', (event) => {
+        if (pointerStartedOnBackdrop && event.target === dialog) dialog.close();
+        pointerStartedOnBackdrop = false;
+      });
+
+      dialog.addEventListener('close', () => {
+        if (!document.querySelector('[data-program-dialog][open]')) {
+          document.body.classList.remove('program-dialog-open');
+        }
+        const opener = returnFocus.get(dialog);
+        if (opener?.isConnected) opener.focus();
+      });
+    });
+  }
+</script>
+
+<style>
+  .agenda-title-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1.25rem;
+  }
+
+  .agenda-title-row h3 {
+    padding-top: .3rem;
+  }
+
+  .agenda-details-button {
+    flex: none;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  @media (max-width: 760px) {
+    .agenda-title-row {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: .8rem;
+    }
+  }
+</style>

@@ -1,0 +1,14 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Icon from '../../components/Icon.astro';
+import PageHero from '../../components/PageHero.astro';
+import SectionHeading from '../../components/SectionHeading.astro';
+import { siteConfig } from '../../data/site';
+---
+
+<BaseLayout title="Suggest a Resource" description="How to suggest a resource for the SPARK Community Hub.">
+  <PageHero eyebrow="Contribute" title="Suggest a useful community resource." description="The reviewed submission workflow is still being prepared. For now, you may email a public link and a short explanation of why it would help the AI in Science community." status="planning" compact>
+    <div slot="actions" class="page-actions"><a class="button button-gold" href={`mailto:${siteConfig.contactEmail}?subject=SPARK%20resource%20suggestion`}>Email a suggestion <Icon name="mail" size={18}/></a></div>
+  </PageHero>
+  <section class="section section-white"><div class="container"><SectionHeading eyebrow="Review criteria" title="Useful, attributable, accessible, and maintainable." description="Suggestions are reviewed before publication. Submission does not guarantee listing."/><div class="card-grid"><article class="icon-card"><span class="icon-card-icon"><Icon name="document" size={22}/></span><h3>Clear source</h3><p>Provide an official or stable URL, author or maintaining organization, resource type, and any known license.</p></article><article class="icon-card"><span class="icon-card-icon"><Icon name="people" size={22}/></span><h3>Community relevance</h3><p>Explain the intended audience, learning level, scientific or translation use case, and what makes it valuable.</p></article><article class="icon-card"><span class="icon-card-icon"><Icon name="check" size={22}/></span><h3>Responsible sharing</h3><p>Do not send copyrighted files, private data, credentials, participant information, or material you lack permission to share.</p></article></div><div class="notice mt-3"><Icon name="spark" size={21}/><p><strong>Public information only.</strong> Email is not an approved channel for sensitive data. A structured submission form and editorial workflow will be added later.</p></div></div></section>
+</BaseLayout>

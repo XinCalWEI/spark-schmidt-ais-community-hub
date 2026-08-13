@@ -1,0 +1,22 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import CollectionFilter from '../../components/CollectionFilter.astro';
+import EmptyState from '../../components/EmptyState.astro';
+import EventCard from '../../components/EventCard.astro';
+import Icon from '../../components/Icon.astro';
+import PageHero from '../../components/PageHero.astro';
+import { withBase } from '../../lib/urls';
+
+const entries=(await getCollection('events',({data})=>!data.draft&&!['completed','cancelled'].includes(data.status))).sort((a,b)=>(a.data.startAt?.getTime()??Infinity)-(b.data.startAt?.getTime()??Infinity));
+const formatOptions=[...new Set(entries.map(e=>e.data.format))].sort().map(value=>({value,label:value.replaceAll('-',' ')}));
+const statusOptions=[...new Set(entries.map(e=>e.data.status))].sort().map(value=>({value,label:value.replaceAll('-',' ')}));
+---
+
+<BaseLayout title="Events" description="SPARK Forum activities, alumni talks, workshops, and community events.">
+  <PageHero eyebrow="Community hub" title="Learn together, before and after the Forum." description="This calendar will host Forum milestones, alumni talks, practical workshops, project showcases, office hours, and selected partner activities." compact><div slot="actions" class="page-actions"><a class="button button-gold" href={withBase('events/archive/')}>Past events <Icon name="arrow-right" size={18}/></a></div></PageHero>
+  <section class="section section-white"><div class="container collection-browser" data-collection-browser>{entries.length>0?<><CollectionFilter count={entries.length} searchPlaceholder="Search events" filters={[{key:'format',label:'Format',options:formatOptions},{key:'status',label:'Status',options:statusOptions}]}/><div class="card-grid">{entries.map(entry=><EventCard entry={entry}/>)}</div><div data-filter-empty hidden><EmptyState title="No events match those filters." description="Try another search or clear the selected filters." icon="search"/></div></>:<EmptyState title="No upcoming events are published yet." description="Confirmed event dates and registration links will appear here." icon="calendar"/>}</div></section>
+  <section class="section"><div class="container event-types"><article><span>01</span><h2>Forum</h2><p>Program announcements, preparation sessions, the focused gathering, and follow-on project showcases.</p></article><article><span>02</span><h2>Skills</h2><p>Hands-on sessions for reproducible research, open software, AI tools, communication, and implementation.</p></article><article><span>03</span><h2>Community</h2><p>Alumni talks, career conversations, peer exchange, mentorship touchpoints, and partner events.</p></article></div></section>
+</BaseLayout>
+
+<style>.event-types{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}.event-types article{border-top:2px solid var(--gold-500);padding-top:1.2rem}.event-types span{color:var(--gold-700);font-size:.72rem;font-weight:850}.event-types h2{margin-top:1.8rem;font-size:1.4rem}.event-types p{margin-top:.55rem;color:var(--slate);font-size:.88rem}@media(max-width:760px){.event-types{grid-template-columns:1fr}}</style>

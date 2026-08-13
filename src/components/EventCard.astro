@@ -1,0 +1,24 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import Icon from './Icon.astro';
+import StatusBadge from './StatusBadge.astro';
+import { formatDate } from '../lib/dates';
+import { withBase } from '../lib/urls';
+
+interface Props { entry: CollectionEntry<'events'>; }
+const { entry } = Astro.props;
+const { data } = entry;
+---
+
+<article class="content-card" data-filter-card data-status={data.status} data-format={data.format}>
+  <div class="content-card-body">
+    <div class="card-topline"><span class="card-kicker">Community event</span><StatusBadge status={data.status}/></div>
+    <h3><a href={withBase(`events/${entry.id}/`)}>{data.title}</a></h3>
+    <p class="card-summary">{data.summary}</p>
+    <div class="card-meta">
+      <span><Icon name="calendar" size={15}/>{data.startAt ? formatDate(data.startAt) : data.dateLabel ?? 'Date to be confirmed'}</span>
+      <span><Icon name="location" size={15}/>{data.location ?? data.format.replaceAll('-', ' ')}</span>
+    </div>
+    <div class="card-footer"><span>{data.format.replaceAll('-', ' ')}</span><Icon name="arrow-right" size={17}/></div>
+  </div>
+</article>

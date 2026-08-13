@@ -1,0 +1,20 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import Icon from './Icon.astro';
+import { formatDate } from '../lib/dates';
+import { withBase } from '../lib/urls';
+
+interface Props { entry: CollectionEntry<'stories'>; }
+const { entry } = Astro.props;
+const { data } = entry;
+---
+
+<article class="content-card" data-filter-card data-type={data.type}>
+  <div class="content-card-body">
+    <div class="card-topline"><span class="card-kicker">{data.type.replace('-', ' ')}</span><time datetime={data.publishedAt.toISOString()} class="text-muted">{formatDate(data.publishedAt)}</time></div>
+    <h3><a href={withBase(`stories/${entry.id}/`)}>{data.title}</a></h3>
+    <p class="card-summary">{data.summary}</p>
+    {data.tags.length > 0 && <div class="card-tags">{data.tags.slice(0, 3).map((tag) => <span class="tag">{tag}</span>)}</div>}
+    <div class="card-footer"><span>Read story</span><Icon name="arrow-right" size={17}/></div>
+  </div>
+</article>

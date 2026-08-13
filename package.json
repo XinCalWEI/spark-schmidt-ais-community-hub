@@ -1,0 +1,30 @@
+{
+  "name": "spark-schmidt-ais-community-hub",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "ASTRO_TELEMETRY_DISABLED=1 astro dev",
+    "start": "ASTRO_TELEMETRY_DISABLED=1 astro dev",
+    "build": "ASTRO_TELEMETRY_DISABLED=1 astro build && node scripts/build-search.mjs",
+    "build:site": "ASTRO_TELEMETRY_DISABLED=1 astro build",
+    "preview": "ASTRO_TELEMETRY_DISABLED=1 astro preview",
+    "check": "ASTRO_TELEMETRY_DISABLED=1 astro check",
+    "check:links": "node scripts/check-internal-links.mjs",
+    "qa:browser": "node scripts/browser-smoke.mjs",
+    "qa": "npm run check && npm run build && npm run check:links"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.0",
+    "astro": "^7.1.0"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.0",
+    "pagefind": "^1.4.0",
+    "playwright-core": "^1.62.1",
+    "typescript": "^5.9.0"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  }
+}

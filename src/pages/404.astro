@@ -1,0 +1,11 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+import { withBase } from '../lib/urls';
+---
+
+<BaseLayout title="Page not found" description="The requested SPARK Community Hub page was not found." noindex>
+  <section class="not-found"><div class="narrow"><span>404</span><h1>This page did not spark.</h1><p>The address may have changed, or the page may not exist yet. Go to About SPARK or search the published site.</p><div class="page-actions"><a class="button button-gold" href={withBase('about/')}>Go to About SPARK <Icon name="arrow-right" size={18}/></a><a class="button button-outline-light" href={withBase('search/')}>Search the site</a></div></div></section>
+</BaseLayout>
+
+<style>.not-found{min-height:65vh;display:grid;place-items:center;background:var(--navy-900);color:#c9d7de;padding:4rem 0;text-align:center}.not-found span{color:var(--gold-400);font-family:var(--font-display);font-size:clamp(4rem,15vw,10rem);font-weight:800;line-height:1}.not-found h1{margin-top:.5rem;color:white;font-size:clamp(2rem,5vw,4rem)}.not-found p{max-width:55ch;margin:1rem auto 0}.not-found .page-actions{justify-content:center}</style>

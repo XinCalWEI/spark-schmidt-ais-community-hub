@@ -1,0 +1,74 @@
+---
+import AlertBanner from '../components/AlertBanner.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import { siteConfig, websiteCreator } from '../data/site';
+import { absoluteUrl, withBase } from '../lib/urls';
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  noindex?: boolean;
+  pageClass?: string;
+}
+
+const {
+  title,
+  description = siteConfig.description,
+  noindex = false,
+  pageClass = '',
+} = Astro.props;
+const pageTitle = title ? `${title} | ${siteConfig.shortName}` : `${siteConfig.name} | AI research to real-world impact`;
+const canonical = absoluteUrl(Astro.url.pathname.replace(import.meta.env.BASE_URL, ''));
+const socialImage = absoluteUrl('brand/spark-logo.png');
+---
+
+<!doctype html>
+<html lang="en" data-base={import.meta.env.BASE_URL}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="author" content={`${websiteCreator.name}, ${websiteCreator.affiliation}`} />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="theme-color" content="#0b2237" />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={socialImage} />
+    <meta property="og:site_name" content={siteConfig.name} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" href={withBase('favicon.svg')} type="image/svg+xml" />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'Organization',
+      name: siteConfig.name,
+      url: absoluteUrl('about/'),
+      description: siteConfig.description,
+      email: siteConfig.contactEmail,
+      creator: {
+        '@type': 'Person',
+        name: websiteCreator.name,
+        url: websiteCreator.profileUrl,
+        affiliation: {
+          '@type': 'Organization',
+          name: websiteCreator.affiliation,
+        },
+      },
+    })}></script>
+  </head>
+  <body class={pageClass}>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+    <AlertBanner />
+    <Header />
+    <main id="main-content" data-pagefind-body>
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

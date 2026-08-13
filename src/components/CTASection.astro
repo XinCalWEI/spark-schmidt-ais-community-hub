@@ -1,0 +1,23 @@
+---
+import Icon from './Icon.astro';
+
+interface Props {
+  eyebrow?: string;
+  title: string;
+  description: string;
+}
+const { eyebrow, title, description } = Astro.props;
+---
+
+<section class="cta-panel">
+  <div class="cta-glow" aria-hidden="true"></div>
+  <div class="cta-copy">
+    {eyebrow && <p class="eyebrow eyebrow-light"><span aria-hidden="true"></span>{eyebrow}</p>}
+    <h2>{title}</h2>
+    <p>{description}</p>
+  </div>
+  <div class="cta-actions">
+    <slot />
+  </div>
+  <Icon name="spark" size={72}/>
+</section>

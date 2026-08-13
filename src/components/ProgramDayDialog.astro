@@ -1,0 +1,362 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import Icon from './Icon.astro';
+import StatusBadge from './StatusBadge.astro';
+
+interface Props {
+  session: CollectionEntry<'sessions'>;
+  dialogId: string;
+}
+
+const { session, dialogId } = Astro.props;
+const { data } = session;
+const titleId = `${dialogId}-title`;
+const summaryId = `${dialogId}-summary`;
+const dayLabel = data.day === 0 ? 'Arrival evening' : `Day ${data.day}`;
+
+const kindLabels: Record<(typeof data.schedule)[number]['kind'], string> = {
+  arrival: 'Arrival',
+  meal: 'Meal',
+  session: 'Session',
+  break: 'Break',
+  discussion: 'Discussion',
+  workshop: 'Workshop',
+  'project-work': 'Project work',
+  community: 'Community time',
+  reflection: 'Reflection',
+};
+---
+
+<dialog
+  class="program-dialog"
+  id={dialogId}
+  data-program-dialog
+  aria-labelledby={titleId}
+  aria-describedby={summaryId}
+>
+  <div class="program-dialog-surface">
+    <header class="program-dialog-header">
+      <div>
+        <div class="program-dialog-status">
+          <span>{dayLabel}</span>
+          <StatusBadge status={data.status} label="Working agenda" />
+        </div>
+        <h2 id={titleId} tabindex="-1" data-dialog-title>{data.dayTitle}</h2>
+        <p id={summaryId}>{data.summary}</p>
+      </div>
+      <form method="dialog">
+        <button class="program-dialog-close" type="submit" aria-label={`Close ${dayLabel} details`}>
+          <Icon name="x" size={22} />
+        </button>
+      </form>
+    </header>
+
+    <div class="program-dialog-body">
+      <div class="program-dialog-notice">
+        <Icon name="clock" size={21} />
+        <p><strong>Program preview.</strong> Times are shown in local Ann Arbor time and remain tentative until the exact Forum dates, venue, contributors, and final program are confirmed.</p>
+      </div>
+
+      {data.dayNotes.length > 0 && (
+        <aside class="program-day-notes" aria-labelledby={`${dialogId}-notes-title`}>
+          <h3 id={`${dialogId}-notes-title`}>Planning notes</h3>
+          <ul>
+            {data.dayNotes.map((note) => <li>{note}</li>)}
+          </ul>
+        </aside>
+      )}
+
+      <ol class="program-schedule" aria-label={`Working schedule for ${dayLabel}`}>
+        {data.schedule.map((item) => (
+          <li class="program-schedule-item">
+            <div class="program-schedule-when">
+              <span class="program-schedule-time">{item.time}</span>
+              <span class={`program-schedule-kind program-schedule-kind-${item.kind}`}>{kindLabels[item.kind]}</span>
+            </div>
+            <div class="program-schedule-content">
+              <h3>{item.title}</h3>
+              {item.description && <p>{item.description}</p>}
+              {item.details.length > 0 && (
+                <ul>
+                  {item.details.map((detail) => <li>{detail}</li>)}
+                </ul>
+              )}
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+
+    <footer class="program-dialog-footer">
+      <p>Contributors will be named only after participation and public attribution are confirmed.</p>
+      <form method="dialog">
+        <button class="button button-primary button-small" type="submit">Close details</button>
+      </form>
+    </footer>
+  </div>
+</dialog>
+
+<style>
+  .program-dialog {
+    width: min(56rem, calc(100vw - 2rem));
+    max-width: none;
+    max-height: calc(100dvh - 2rem);
+    overflow: hidden;
+    border: 0;
+    border-radius: var(--radius-lg);
+    background: var(--white);
+    color: var(--ink);
+    padding: 0;
+    box-shadow: 0 28px 90px rgba(2, 13, 23, .38);
+  }
+
+  .program-dialog::backdrop {
+    background: rgba(4, 17, 28, .76);
+    backdrop-filter: blur(3px);
+  }
+
+  .program-dialog-surface {
+    display: flex;
+    max-height: inherit;
+    flex-direction: column;
+  }
+
+  .program-dialog-header {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 1.5rem;
+    flex: none;
+    background: radial-gradient(circle at 88% 10%, rgba(228, 185, 73, .14), transparent 15rem), var(--navy-900);
+    color: #d6e1e7;
+    padding: clamp(1.45rem, 4vw, 2.25rem);
+  }
+
+  .program-dialog-status {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: .65rem;
+    color: var(--gold-200);
+    font-size: .75rem;
+    font-weight: 850;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+  }
+
+  .program-dialog-header h2 {
+    max-width: 21ch;
+    margin-top: .85rem;
+    color: var(--white);
+    font-size: clamp(1.65rem, 4vw, 2.55rem);
+  }
+
+  .program-dialog-header p {
+    max-width: 68ch;
+    margin-top: .85rem;
+    color: #c7d5dc;
+  }
+
+  .program-dialog-close {
+    display: grid;
+    width: 44px;
+    height: 44px;
+    place-items: center;
+    border: 1px solid rgba(255, 255, 255, .32);
+    border-radius: 50%;
+    background: rgba(255, 255, 255, .07);
+    color: var(--white);
+    cursor: pointer;
+  }
+
+  .program-dialog-close:hover {
+    border-color: var(--white);
+    background: rgba(255, 255, 255, .14);
+  }
+
+  .program-dialog-body {
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: clamp(1.25rem, 4vw, 2.25rem);
+  }
+
+  .program-dialog-notice {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: .75rem;
+    border: 1px solid #ddc470;
+    border-radius: var(--radius-sm);
+    background: var(--gold-100);
+    color: #4e4019;
+    padding: .95rem 1rem;
+  }
+
+  .program-dialog-notice .icon {
+    margin-top: .15rem;
+    color: var(--gold-700);
+  }
+
+  .program-dialog-notice p {
+    font-size: .88rem;
+  }
+
+  .program-day-notes {
+    margin-top: 1.25rem;
+    border-left: 3px solid var(--teal-700);
+    background: var(--teal-100);
+    padding: 1rem 1.15rem;
+  }
+
+  .program-day-notes h3 {
+    font-size: .9rem;
+  }
+
+  .program-day-notes ul {
+    margin-top: .55rem;
+    padding-left: 1.2rem;
+    color: #304f53;
+    font-size: .85rem;
+  }
+
+  .program-day-notes li + li {
+    margin-top: .35rem;
+  }
+
+  .program-schedule {
+    margin-top: 1.5rem;
+    list-style: none;
+  }
+
+  .program-schedule-item {
+    display: grid;
+    grid-template-columns: minmax(8.5rem, 10.5rem) minmax(0, 1fr);
+    gap: clamp(1rem, 3vw, 2rem);
+    border-top: 1px solid var(--line);
+    padding-block: 1.3rem;
+  }
+
+  .program-schedule-item:first-child {
+    border-top: 0;
+    padding-top: 0;
+  }
+
+  .program-schedule-when {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: .55rem;
+  }
+
+  .program-schedule-time {
+    color: var(--navy-900);
+    font-size: .86rem;
+    font-weight: 800;
+    line-height: 1.4;
+  }
+
+  .program-schedule-kind {
+    display: inline-flex;
+    border: 1px solid #cfd9de;
+    border-radius: 999px;
+    background: #edf3f5;
+    color: #405663;
+    padding: .2rem .55rem;
+    font-size: .68rem;
+    font-weight: 800;
+    line-height: 1.3;
+  }
+
+  .program-schedule-kind-workshop,
+  .program-schedule-kind-project-work {
+    border-color: #afd4d5;
+    background: var(--teal-100);
+    color: var(--teal-700);
+  }
+
+  .program-schedule-kind-community,
+  .program-schedule-kind-reflection {
+    border-color: #e5cd85;
+    background: var(--gold-100);
+    color: #71510b;
+  }
+
+  .program-schedule-content h3 {
+    font-size: 1.08rem;
+    line-height: 1.3;
+  }
+
+  .program-schedule-content p,
+  .program-schedule-content ul {
+    margin-top: .55rem;
+    color: var(--slate);
+    font-size: .88rem;
+  }
+
+  .program-schedule-content ul {
+    padding-left: 1.15rem;
+  }
+
+  .program-schedule-content li + li {
+    margin-top: .35rem;
+  }
+
+  .program-dialog-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex: none;
+    border-top: 1px solid var(--line);
+    background: var(--paper);
+    padding: 1rem clamp(1.25rem, 4vw, 2.25rem);
+  }
+
+  .program-dialog-footer p {
+    max-width: 58ch;
+    color: var(--muted);
+    font-size: .76rem;
+  }
+
+  @media (max-width: 640px) {
+    .program-dialog {
+      width: calc(100vw - 1rem);
+      max-height: calc(100dvh - .75rem);
+      margin: auto .5rem .5rem;
+      border-radius: var(--radius) var(--radius) .6rem .6rem;
+    }
+
+    .program-dialog-header {
+      gap: .75rem;
+      padding: 1.25rem;
+    }
+
+    .program-dialog-header h2 {
+      font-size: 1.55rem;
+    }
+
+    .program-dialog-body {
+      padding: 1.1rem;
+    }
+
+    .program-schedule-item {
+      grid-template-columns: 1fr;
+      gap: .65rem;
+      padding-block: 1.15rem;
+    }
+
+    .program-schedule-when {
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .program-dialog-footer {
+      align-items: stretch;
+      flex-direction: column;
+      padding: .9rem 1.1rem;
+    }
+
+    .program-dialog-footer .button {
+      width: 100%;
+    }
+  }
+</style>

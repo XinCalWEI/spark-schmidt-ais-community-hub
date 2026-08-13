@@ -1,0 +1,165 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import EmptyState from '../../components/EmptyState.astro';
+import Icon from '../../components/Icon.astro';
+import PageHero from '../../components/PageHero.astro';
+import SectionHeading from '../../components/SectionHeading.astro';
+import { siteConfig } from '../../data/site';
+import { withBase } from '../../lib/urls';
+
+const profiles = (await getCollection(
+  'fellows',
+  ({ data }) => !data.draft && data.consentToPublish,
+)).sort((a, b) => a.data.name.localeCompare(b.data.name));
+const currentFellows = profiles.filter(({ data }) => data.fellowshipStatus === 'current');
+const alumni = profiles.filter(({ data }) => data.fellowshipStatus === 'alumni');
+---
+
+<BaseLayout
+  title="Schmidt AI in Science Fellows"
+  description="An evolving, community-maintained introduction to current and alumni Schmidt AI in Science Fellows."
+>
+  <PageHero
+    eyebrow="Fellows community"
+    title="Schmidt AI in Science Fellows"
+    description="This evolving community page will introduce current Fellows and alumni across cohorts, institutions, scientific fields, and career paths—and make it easier for people to learn from and connect with one another."
+    compact
+  >
+    <div slot="actions" class="page-actions">
+      <a class="button button-gold" href={'mailto:' + siteConfig.contactEmail + '?subject=SPARK%20Fellows%20profile'}>Contribute a profile <Icon name="mail" size={18} /></a>
+    </div>
+  </PageHero>
+
+  <section class="section section-white">
+    <div class="container fellows-intro">
+      <SectionHeading
+        eyebrow="Community across cohorts"
+        title="A public window into the people advancing AI-enabled science."
+        description="The directory is intended to help Fellows and alumni discover shared research interests, understand one another’s paths, and identify opportunities for mentorship and collaboration."
+      />
+      <div>
+        <div class="notice">
+          <Icon name="people" size={21} />
+          <p><strong>Directory in development.</strong> Profiles will be published only after the individual has reviewed the information and agreed to its public use. This community-maintained page may not be a complete or official Fellowship roster.</p>
+        </div>
+        <div class="cohort-summary">
+          <article><strong>Current Fellows</strong><p>Research interests, scientific domains, institutions, and work in progress.</p></article>
+          <article><strong>Alumni Fellows</strong><p>Research, career journeys, cross-sector experience, mentorship, and community contributions.</p></article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionHeading
+        eyebrow="Fellow profiles"
+        title={profiles.length ? 'Meet members of the community.' : 'Profiles are coming soon.'}
+        description={profiles.length ? 'Every profile below has been reviewed for public publication.' : 'The profile structure and consent-based publishing workflow are ready. Verified profiles will be added here as community members review and approve them.'}
+      />
+
+      {profiles.length > 0 ? (
+        <div class="profile-groups">
+          {currentFellows.length > 0 && (
+            <section aria-labelledby="current-fellows">
+              <h2 id="current-fellows">Current Fellows</h2>
+              <div class="profile-grid">
+                {currentFellows.map(({ id, data }) => (
+                  <article class="profile-card">
+                    <span aria-hidden="true">{data.name.split(' ').map((part) => part[0]).join('').slice(0, 3)}</span>
+                    <div><h3><a href={withBase('fellows/' + id + '/')}>{data.name}</a></h3><p>{data.institution}</p><small>{data.disciplines.join(' · ')}</small></div>
+                  </article>
+                ))}
+              </div>
+            </section>
+          )}
+          {alumni.length > 0 && (
+            <section aria-labelledby="alumni-fellows">
+              <h2 id="alumni-fellows">Alumni Fellows</h2>
+              <div class="profile-grid">
+                {alumni.map(({ id, data }) => (
+                  <article class="profile-card">
+                    <span aria-hidden="true">{data.name.split(' ').map((part) => part[0]).join('').slice(0, 3)}</span>
+                    <div><h3><a href={withBase('fellows/' + id + '/')}>{data.name}</a></h3><p>{data.institution}</p><small>{data.disciplines.join(' · ')}</small></div>
+                  </article>
+                ))}
+              </div>
+            </section>
+          )}
+        </div>
+      ) : (
+        <EmptyState
+          title="The directory is being prepared."
+          description="No placeholder people or scraped biographies are used. Profiles will appear after identity, affiliation, biography, links, and publication permission are reviewed."
+          icon="people"
+        >
+          <a class="button button-primary" href={'mailto:' + siteConfig.contactEmail + '?subject=SPARK%20Fellows%20profile'}>Ask to be included</a>
+        </EmptyState>
+      )}
+    </div>
+  </section>
+
+  <section class="section section-navy">
+    <div class="container profile-policy">
+      <div>
+        <p class="eyebrow eyebrow-light"><span aria-hidden="true"></span>Profile policy</p>
+        <h2>Useful, accurate, and controlled by the person represented.</h2>
+      </div>
+      <ul>
+        <li><Icon name="check" size={18} /><span><strong>Reviewed</strong> — names, status, cohort, affiliation, and biography are checked before publication.</span></li>
+        <li><Icon name="check" size={18} /><span><strong>Permission-based</strong> — photographs, biography text, research interests, and links are published with consent.</span></li>
+        <li><Icon name="check" size={18} /><span><strong>Correctable</strong> — a Fellow or alum can request an update or removal at any time.</span></li>
+        <li><Icon name="check" size={18} /><span><strong>Privacy-aware</strong> — personal email addresses, phone numbers, and internal community data are not listed by default.</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section-white">
+    <div class="container related-grid">
+      <a href={withBase('stories/')}><Icon name="spark" size={22} /><h2>Community stories</h2><p>Research paths, lessons, collaborations, and public impact.</p><span>Read stories <Icon name="arrow-right" size={17} /></span></a>
+      <a href={withBase('events/')}><Icon name="calendar" size={22} /><h2>Events</h2><p>Forum sessions, alumni talks, workshops, and community activities.</p><span>See events <Icon name="arrow-right" size={17} /></span></a>
+      <a href={withBase('opportunities/')}><Icon name="globe" size={22} /><h2>Opportunities</h2><p>Fellowships, jobs, grants, workshops, and calls for collaboration.</p><span>Browse opportunities <Icon name="arrow-right" size={17} /></span></a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .fellows-intro { display: grid; grid-template-columns: .9fr 1.1fr; gap: clamp(3rem, 8vw, 7rem); align-items: start; }
+  .fellows-intro .section-heading { margin: 0; }
+  .cohort-summary { display: grid; grid-template-columns: 1fr 1fr; gap: .8rem; margin-top: 1rem; }
+  .cohort-summary article { border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 1rem; }
+  .cohort-summary strong { color: var(--navy-950); }
+  .cohort-summary p { margin-top: .35rem; color: var(--slate); font-size: .82rem; }
+  .profile-groups { display: grid; gap: 3rem; }
+  .profile-groups > section > h2 { margin-bottom: 1rem; font-size: 1.35rem; }
+  .profile-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .85rem; }
+  .profile-card { display: grid; grid-template-columns: 3.5rem minmax(0, 1fr); gap: .9rem; border: 1px solid var(--line); border-radius: var(--radius); background: white; padding: 1.15rem; }
+  .profile-card > span { display: grid; width: 3.5rem; height: 3.5rem; place-items: center; border-radius: 50%; background: var(--navy-900); color: var(--gold-400); font-size: .75rem; font-weight: 850; }
+  .profile-card h3 { font-size: 1.05rem; }
+  .profile-card h3 a { color: var(--navy-950); text-decoration: none; }
+  .profile-card p, .profile-card small { display: block; margin-top: .3rem; color: var(--slate); font-size: .76rem; line-height: 1.45; }
+  .profile-policy { display: grid; grid-template-columns: .85fr 1.15fr; gap: clamp(3rem, 8vw, 7rem); }
+  .profile-policy h2 { margin-top: .7rem; }
+  .profile-policy ul { display: grid; gap: .7rem; list-style: none; }
+  .profile-policy li { display: grid; grid-template-columns: 1.7rem minmax(0, 1fr); gap: .7rem; border: 1px solid rgba(255,255,255,.14); border-radius: var(--radius-sm); padding: 1rem; color: #ccdae1; font-size: .86rem; }
+  .profile-policy li .icon { color: var(--gold-400); }
+  .profile-policy li strong { color: white; }
+  .related-grid { display: grid; grid-template-columns: repeat(3, 1fr); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+  .related-grid > a { min-height: 230px; color: var(--ink); padding: 1.4rem; text-decoration: none; }
+  .related-grid > a + a { border-left: 1px solid var(--line); }
+  .related-grid > a > .icon { margin-bottom: 2.2rem; color: var(--gold-700); }
+  .related-grid h2 { font-size: 1.2rem; }
+  .related-grid p { margin-top: .55rem; color: var(--slate); font-size: .84rem; }
+  .related-grid span { display: inline-flex; align-items: center; gap: .35rem; margin-top: 1rem; color: var(--navy-700); font-size: .76rem; font-weight: 800; }
+  .related-grid > a:hover { background: var(--gold-100); }
+
+  @media (max-width: 1023px) {
+    .profile-grid { grid-template-columns: 1fr 1fr; }
+  }
+
+  @media (max-width: 760px) {
+    .fellows-intro, .profile-policy, .profile-grid, .related-grid, .cohort-summary { grid-template-columns: 1fr; }
+    .related-grid > a + a { border-top: 1px solid var(--line); border-left: 0; }
+  }
+</style>

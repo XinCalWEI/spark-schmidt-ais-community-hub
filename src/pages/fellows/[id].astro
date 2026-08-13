@@ -1,0 +1,52 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import Icon from '../../components/Icon.astro';
+
+export async function getStaticPaths() {
+  const profiles = await getCollection(
+    'fellows',
+    ({ data }) => !data.draft && data.consentToPublish,
+  );
+  return profiles.map((entry) => ({ params: { id: entry.id }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const { data } = entry;
+const { Content } = await render(entry);
+const statusLabel = data.fellowshipStatus === 'current' ? 'Current Fellow' : 'Alumni Fellow';
+---
+
+<BaseLayout title={data.name} description={data.summary}>
+  <section class="section section-white">
+    <div class="narrow">
+      <Breadcrumbs items={[{ label: 'Schmidt AI in Science Fellows', href: 'fellows/' }, { label: data.name }]} />
+      <article class="fellow-profile">
+        <header>
+          <p>{statusLabel}{data.cohort ? ' · ' + data.cohort : ''}</p>
+          <h1>{data.name}</h1>
+          {data.title && <strong>{data.title}</strong>}
+          <span>{data.institution}</span>
+          <div class="profile-tags">{data.disciplines.map((discipline) => <small>{discipline}</small>)}</div>
+          <p class="profile-summary">{data.summary}</p>
+          {data.profileUrl && <a class="button button-primary" href={data.profileUrl} target="_blank" rel="noopener noreferrer">Visit professional profile <Icon name="external" size={17} /></a>}
+        </header>
+        <div class="prose"><Content /></div>
+      </article>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .fellow-profile { margin-top: 2rem; }
+  .fellow-profile header > p:first-child { color: var(--gold-700); font-size: .75rem; font-weight: 850; letter-spacing: .08em; text-transform: uppercase; }
+  .fellow-profile h1 { margin-top: .45rem; font-size: clamp(2.5rem, 7vw, 5rem); }
+  .fellow-profile header > strong, .fellow-profile header > span { display: block; margin-top: .55rem; }
+  .fellow-profile header > span { color: var(--slate); }
+  .profile-tags { display: flex; flex-wrap: wrap; gap: .4rem; margin-top: 1.2rem; }
+  .profile-tags small { border-radius: 999px; background: var(--gold-100); color: var(--gold-700); padding: .3rem .65rem; font-weight: 750; }
+  .profile-summary { max-width: 65ch; margin-top: 1.3rem; color: var(--slate); font-size: 1.1rem; }
+  .fellow-profile .button { margin-top: 1.4rem; }
+  .fellow-profile .prose { border-top: 1px solid var(--line); margin-top: 3rem; padding-top: 2rem; }
+</style>

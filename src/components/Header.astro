@@ -1,0 +1,121 @@
+---
+import { Image } from 'astro:assets';
+import Icon from './Icon.astro';
+import { withBase } from '../lib/urls';
+import sparkLogo from '../assets/spark-logo.png';
+
+const navItems = [
+  { label: 'About', href: 'about/' },
+  { label: 'Forum 2026', href: 'forum/2026/' },
+  { label: 'Schmidt AI in Science Fellows', href: 'fellows/' },
+  { label: 'Opportunities', href: 'opportunities/' },
+  { label: 'Resources', href: 'resources/' },
+  { label: 'Events', href: 'events/' },
+  { label: 'Stories', href: 'stories/' },
+];
+
+const base = import.meta.env.BASE_URL;
+const currentPath = Astro.url.pathname.startsWith(base)
+  ? `/${Astro.url.pathname.slice(base.length)}`
+  : Astro.url.pathname;
+
+function isActive(href: string): boolean {
+  return currentPath.startsWith(`/${href}`);
+}
+---
+
+<header class="site-header" data-site-header>
+  <div class="container header-inner">
+    <a class="brand brand-header" href={withBase('about/')} aria-label="About SPARK">
+      <span class="brand-header-mark" aria-hidden="true">
+        <span class="brand-header-bulb-glow"></span>
+        <Image
+          class="brand-header-logo"
+          src={sparkLogo}
+          alt=""
+          width={128}
+          loading="eager"
+          decoding="async"
+        />
+        <Image
+          class="brand-header-bulb"
+          src={sparkLogo}
+          alt=""
+          width={128}
+          loading="eager"
+          decoding="async"
+        />
+      </span>
+    </a>
+
+    <nav class="desktop-nav" aria-label="Primary navigation">
+      <ul>
+        {navItems.map((item) => (
+          <li><a href={withBase(item.href)} aria-current={isActive(item.href) ? 'page' : undefined}>{item.label}</a></li>
+        ))}
+      </ul>
+    </nav>
+
+    <div class="header-actions">
+      <a class="search-link" href={withBase('search/')} aria-label="Search the site"><Icon name="search" size={19}/></a>
+      <a class="button button-small button-gold desktop-cta" href={withBase('forum/2026/participate/')}>Get updates</a>
+      <button class="menu-button" type="button" aria-expanded="false" aria-controls="mobile-navigation" data-menu-button>
+        <span class="sr-only">Open navigation</span>
+        <span data-menu-open><Icon name="menu" size={23}/></span>
+        <span data-menu-close hidden><Icon name="x" size={23}/></span>
+      </button>
+    </div>
+  </div>
+
+  <nav id="mobile-navigation" class="mobile-nav" aria-label="Mobile navigation" data-mobile-nav hidden>
+    <div class="container">
+      <ul>
+        {navItems.map((item) => (
+          <li><a href={withBase(item.href)} aria-current={isActive(item.href) ? 'page' : undefined}>{item.label}<Icon name="chevron-right" size={18}/></a></li>
+        ))}
+      </ul>
+      <a class="button button-gold button-full" href={withBase('forum/2026/participate/')}>Get Forum updates <Icon name="arrow-right" size={18}/></a>
+    </div>
+  </nav>
+</header>
+
+<script>
+  const menuButton = document.querySelector<HTMLElement>('[data-menu-button]');
+  const mobileNav = document.querySelector<HTMLElement>('[data-mobile-nav]');
+  const openIcon = menuButton?.querySelector<HTMLElement>('[data-menu-open]');
+  const closeIcon = menuButton?.querySelector<HTMLElement>('[data-menu-close]');
+
+  function closeMenu(returnFocus = false) {
+    if (!menuButton || !mobileNav) return;
+    menuButton.setAttribute('aria-expanded', 'false');
+    menuButton.querySelector('.sr-only')!.textContent = 'Open navigation';
+    mobileNav.hidden = true;
+    if (openIcon) openIcon.hidden = false;
+    if (closeIcon) closeIcon.hidden = true;
+    document.body.classList.remove('menu-open');
+    if (returnFocus) menuButton.focus();
+  }
+
+  function openMenu() {
+    if (!menuButton || !mobileNav) return;
+    menuButton.setAttribute('aria-expanded', 'true');
+    menuButton.querySelector('.sr-only')!.textContent = 'Close navigation';
+    mobileNav.hidden = false;
+    if (openIcon) openIcon.hidden = true;
+    if (closeIcon) closeIcon.hidden = false;
+    document.body.classList.add('menu-open');
+    mobileNav.querySelector<HTMLElement>('a')?.focus();
+  }
+
+  menuButton?.addEventListener('click', () => {
+    menuButton.getAttribute('aria-expanded') === 'true' ? closeMenu() : openMenu();
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && menuButton?.getAttribute('aria-expanded') === 'true') closeMenu(true);
+  });
+
+  window.addEventListener('resize', () => {
+    if (window.innerWidth >= 1200) closeMenu();
+  });
+</script>

@@ -1,0 +1,26 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import Icon from '../../components/Icon.astro';
+import PageHero from '../../components/PageHero.astro';
+import StatusBadge from '../../components/StatusBadge.astro';
+import { formatDate } from '../../lib/dates';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('resources', ({ data }) => !data.draft);
+  return entries.map((entry) => ({ params: { id: entry.id }, props: { entry } }));
+}
+
+interface Props { entry: CollectionEntry<'resources'>; }
+const { entry } = Astro.props;
+const { data } = entry;
+const { Content } = await render(entry);
+---
+
+<BaseLayout title={data.title} description={data.summary}>
+  <PageHero eyebrow={`Resource · ${data.type.replace('-', ' ')}`} title={data.title} description={data.summary} status={data.status} compact>
+    <div slot="actions" class="page-actions"><a class="button button-gold" href={data.externalUrl} target="_blank" rel="noopener noreferrer">Visit original resource <Icon name="external" size={17}/></a></div>
+  </PageHero>
+  <section class="section section-white"><div class="container"><Breadcrumbs items={[{label:'Resources',href:'resources/'},{label:data.title}]}/><div class="detail-layout"><article class="prose"><Content /></article><aside class="detail-sidebar"><h2>Resource details</h2><dl class="detail-facts"><div class="detail-fact"><dt>Status</dt><dd><StatusBadge status={data.status}/></dd></div><div class="detail-fact"><dt>Type</dt><dd>{data.type.replace('-', ' ')}</dd></div><div class="detail-fact"><dt>Level</dt><dd>{data.level.replace('-', ' ')}</dd></div><div class="detail-fact"><dt>Authors / provider</dt><dd>{data.authors.join(', ')}</dd></div>{data.license && <div class="detail-fact"><dt>License</dt><dd>{data.license}</dd></div>}<div class="detail-fact"><dt>Last verified</dt><dd><time datetime={data.verifiedAt.toISOString()}>{formatDate(data.verifiedAt)}</time></dd></div></dl><a class="button button-primary button-full" href={data.externalUrl} target="_blank" rel="noopener noreferrer">Open external site <Icon name="external" size={16}/></a></aside></div></div></section>
+</BaseLayout>

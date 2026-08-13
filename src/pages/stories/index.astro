@@ -1,0 +1,17 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import CollectionFilter from '../../components/CollectionFilter.astro';
+import EmptyState from '../../components/EmptyState.astro';
+import Icon from '../../components/Icon.astro';
+import PageHero from '../../components/PageHero.astro';
+import StoryCard from '../../components/StoryCard.astro';
+import { withBase } from '../../lib/urls';
+const entries=(await getCollection('stories',({data})=>!data.draft)).sort((a,b)=>b.data.publishedAt.getTime()-a.data.publishedAt.getTime());
+const typeOptions=[...new Set(entries.map(e=>e.data.type))].sort().map(value=>({value,label:value.replaceAll('-',' ')}));
+---
+
+<BaseLayout title="Stories" description="Perspectives, project highlights, announcements, and reports from the SPARK community.">
+  <PageHero eyebrow="Community hub" title="Stories behind the science and its impact." description="Read perspectives on research translation, responsible AI, collaboration, careers, projects, and the evolving SPARK community." compact><div slot="actions" class="page-actions"><a class="button button-gold" href={withBase('contribute/')}>Share an idea <Icon name="arrow-right" size={18}/></a></div></PageHero>
+  <section class="section section-white"><div class="container collection-browser" data-collection-browser>{entries.length>0?<><CollectionFilter count={entries.length} searchPlaceholder="Search stories and topics" filters={[{key:'type',label:'Type',options:typeOptions}]}/><div class="card-grid">{entries.map(entry=><StoryCard entry={entry}/>)}</div><div data-filter-empty hidden><EmptyState title="No stories match that search." description="Try another keyword or clear the selected filter." icon="search"/></div></>:<EmptyState title="Community stories are coming soon." description="Only reviewed stories with contributor consent will be published." icon="document"/>}</div></section>
+</BaseLayout>

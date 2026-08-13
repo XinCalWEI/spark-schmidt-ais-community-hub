@@ -1,0 +1,15 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Icon from '../../components/Icon.astro';
+import PageHero from '../../components/PageHero.astro';
+import { siteConfig } from '../../data/site';
+import { organizingTeam } from '../../data/team';
+---
+
+<BaseLayout title="Organizing Team" description="The current SPARK Forum planning team.">
+  <PageHero eyebrow="About · Team" title="Current Fellows and alumni building SPARK together." description="The planning team combines scientific, technical, facilitation, alumni, event, and cross-sector experience." compact />
+  <section class="section section-white"><div class="container"><div class="notice"><Icon name="spark" size={21}/><p>These six organizers are named in the funded proposal. Roles are described conservatively from that proposal; photographs and biographical details are published with team-member review and permission.</p></div><div class="team-grid mt-3">{organizingTeam.map((member)=><article><Image class="team-portrait" src={member.photo} alt={`Portrait of ${member.name}`} width={192} height={192} fit="cover" position={member.photoPosition} loading="lazy" style="width:5.5rem;height:5.5rem;object-fit:cover;border-radius:50%;" /><div><h2><a href={member.profileUrl} target="_blank" rel="noopener noreferrer">{member.name}<Icon name="external" size={14}/></a></h2><strong>{member.role}</strong><small>{member.affiliation}</small><p>{member.focus}</p></div></article>)}</div><div class="team-contact"><h2>Contact the organizing team</h2><p>For public program and collaboration questions, email <a href={`mailto:${siteConfig.contactEmail}`}>{siteConfig.contactEmail}</a>. Sensitive participant information should wait for an approved secure form.</p></div></div></section>
+</BaseLayout>
+
+<style>.team-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}.team-grid article{display:grid;grid-template-columns:5.5rem 1fr;gap:1.15rem;border:1px solid var(--line);border-radius:var(--radius);padding:1.25rem}.team-portrait{width:5.5rem;height:5.5rem;border:2px solid var(--paper-deep);border-radius:50%;background:var(--paper);object-fit:cover}.team-grid h2{font-size:1.15rem}.team-grid h2 a{display:inline-flex;align-items:center;gap:.35rem;color:var(--navy-950);text-decoration:none}.team-grid h2 a:hover{color:var(--gold-700)}.team-grid strong{display:block;margin-top:.25rem;color:var(--gold-700);font-size:.76rem}.team-grid small{display:block;margin-top:.35rem;color:var(--muted);font-size:.73rem;line-height:1.45}.team-grid p{margin-top:.55rem;color:var(--slate);font-size:.84rem}.team-contact{margin-top:3rem;border-top:1px solid var(--line);padding-top:2rem}.team-contact h2{font-size:1.3rem}.team-contact p{margin-top:.5rem;color:var(--slate)}@media(max-width:760px){.team-grid{grid-template-columns:1fr}.team-grid article{grid-template-columns:4.25rem 1fr}.team-portrait{width:4.25rem;height:4.25rem}}</style>

@@ -1,0 +1,52 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import Icon from '../../components/Icon.astro';
+import PageHero from '../../components/PageHero.astro';
+import StatusBadge from '../../components/StatusBadge.astro';
+import { formatDate } from '../../lib/dates';
+
+export async function getStaticPaths(){const entries=await getCollection('opportunities',({data})=>!data.draft);return entries.map(entry=>({params:{id:entry.id},props:{entry}}));}
+interface Props{entry:CollectionEntry<'opportunities'>}
+const {entry}=Astro.props;const {data}=entry;const {Content}=await render(entry);
+---
+
+<BaseLayout title={data.title} description={data.summary}>
+  <PageHero eyebrow={`${data.type} · ${data.organization}`} title={data.title} description={data.summary} status={data.status} compact>
+    <div slot="actions" class="page-actions">
+      {data.applicationUrl ?
+        <a class="button button-gold" href={data.applicationUrl} target="_blank" rel="noopener noreferrer">Apply via official portal <Icon name="external" size={17}/></a> :
+        <a class="button button-gold" href={data.officialUrl} target="_blank" rel="noopener noreferrer">{data.officialUrlLabel ?? 'Visit official program page'} <Icon name="external" size={17}/></a>}
+    </div>
+  </PageHero>
+  <section class="section section-white">
+    <div class="container">
+      <Breadcrumbs items={[{label:'Opportunities',href:'opportunities/'},{label:data.title}]}/>
+      <div class="detail-layout">
+        <article class="prose"><Content/></article>
+        <aside class="detail-sidebar">
+          <h2>Opportunity details</h2>
+          <dl class="detail-facts">
+            <div class="detail-fact"><dt>Status</dt><dd><StatusBadge status={data.status}/></dd></div>
+            <div class="detail-fact"><dt>Organization</dt><dd>{data.organization}</dd></div>
+            {data.awardAmount&&<div class="detail-fact"><dt>Award</dt><dd>{data.awardAmount}</dd></div>}
+            <div class="detail-fact"><dt>Eligibility</dt><dd>{data.audiences.length ? data.audiences.join(' · ') : 'See supplied call'}</dd></div>
+            <div class="detail-fact"><dt>Deadline</dt><dd>{data.rolling?'Rolling':data.deadline?<time datetime={data.deadline.toISOString()}>{data.deadlineLabel ?? formatDate(data.deadline)}</time>:'See official source'}</dd></div>
+            {data.locations.length>0&&<div class="detail-fact"><dt>Location</dt><dd>{data.locations.join(', ')}</dd></div>}
+            <div class="detail-fact"><dt>Last verified</dt><dd><time datetime={data.verifiedAt.toISOString()}>{formatDate(data.verifiedAt)}</time></dd></div>
+          </dl>
+          {data.applicationUrl ?
+            <a class="button button-primary button-full" href={data.applicationUrl} target="_blank" rel="noopener noreferrer">Apply via official portal <Icon name="external" size={16}/></a> :
+            <p class="application-link-pending"><strong>Application link pending.</strong> The supplied call names a SurveyMonkey Apply portal, but its URL was not included.</p>}
+          <a class:list={['button button-full', data.applicationUrl ? 'button-outline' : 'button-primary']} href={data.officialUrl} target="_blank" rel="noopener noreferrer">{data.officialUrlLabel ?? 'Official program page'} <Icon name="external" size={16}/></a>
+        </aside>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .application-link-pending { margin-top: 1.2rem; border: 1px solid #ddc470; border-radius: var(--radius-sm); background: var(--gold-100); color: #4e4019; padding: .85rem; font-size: .8rem; line-height: 1.5; }
+  .detail-sidebar .application-link-pending + .button { margin-top: .75rem; }
+</style>

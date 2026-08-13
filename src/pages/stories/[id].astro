@@ -1,0 +1,17 @@
+---
+import { getCollection,render,type CollectionEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import PageHero from '../../components/PageHero.astro';
+import { formatDate } from '../../lib/dates';
+export async function getStaticPaths(){const entries=await getCollection('stories',({data})=>!data.draft);return entries.map(entry=>({params:{id:entry.id},props:{entry}}));}
+interface Props{entry:CollectionEntry<'stories'>}
+const {entry}=Astro.props;const {data}=entry;const {Content}=await render(entry);
+---
+
+<BaseLayout title={data.title} description={data.summary}>
+  <PageHero eyebrow={data.type.replaceAll('-',' ')} title={data.title} description={data.summary} compact><div slot="aside" class="story-byline"><small>Published</small><time datetime={data.publishedAt.toISOString()}>{formatDate(data.publishedAt)}</time><small>By</small><strong>{data.authors.join(', ')}</strong></div></PageHero>
+  <section class="section section-white"><div class="narrow"><Breadcrumbs items={[{label:'Stories',href:'stories/'},{label:data.title}]}/><article class="prose story-prose"><Content/></article></div></section>
+</BaseLayout>
+
+<style>.story-byline{min-width:220px;border-left:1px solid rgba(255,255,255,.2);padding-left:1.4rem}.story-byline small,.story-byline time,.story-byline strong{display:block}.story-byline small{margin-top:.7rem;color:#9fb2bd;font-size:.65rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase}.story-byline small:first-child{margin-top:0}.story-byline time,.story-byline strong{color:white;font-size:.86rem}.story-prose>p:first-child{font-size:1.2rem;color:var(--ink)}@media(max-width:760px){.story-byline{border-left:0;border-top:1px solid rgba(255,255,255,.2);padding:1rem 0 0}}</style>

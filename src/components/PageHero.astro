@@ -1,0 +1,27 @@
+---
+import StatusBadge from './StatusBadge.astro';
+
+interface Props {
+  eyebrow?: string;
+  title: string;
+  description: string;
+  status?: string;
+  statusLabel?: string;
+  compact?: boolean;
+}
+
+const { eyebrow, title, description, status, statusLabel, compact = false } = Astro.props;
+---
+
+<section class:list={['page-hero', { 'page-hero-compact': compact }]}>
+  <div class="container page-hero-inner">
+    <div class="page-hero-copy">
+      {eyebrow && <p class="eyebrow eyebrow-light"><span aria-hidden="true"></span>{eyebrow}</p>}
+      {status && <div class="page-hero-status"><StatusBadge status={status} label={statusLabel}/></div>}
+      <h1>{title}</h1>
+      <p>{description}</p>
+      <slot name="actions" />
+    </div>
+    <slot name="aside" />
+  </div>
+</section>

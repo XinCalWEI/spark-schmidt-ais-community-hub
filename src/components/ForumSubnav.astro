@@ -1,0 +1,53 @@
+---
+import { withBase } from '../lib/urls';
+
+const links = [
+  ['Overview', 'forum/2026/'],
+  ['Program', 'forum/2026/program/'],
+  ['Speakers', 'forum/2026/speakers/'],
+  ['Projects', 'forum/2026/projects/'],
+  ['Participate', 'forum/2026/participate/'],
+  ['Travel & access', 'forum/2026/travel-accessibility/'],
+  ['FAQ', 'forum/2026/faq/'],
+];
+
+const normalizePath = (path: string) => path.endsWith('/') ? path : `${path}/`;
+const currentPath = normalizePath(Astro.url.pathname);
+---
+
+<nav class="forum-subnav" aria-label="Forum 2026 sections">
+  <div class="container" data-forum-subnav-scroll>
+    <ul>
+      {links.map(([label, href]) => {
+        const url = withBase(href);
+        const isCurrent = currentPath === normalizePath(url);
+        return <li><a href={url} aria-current={isCurrent ? 'page' : undefined}>{label}</a></li>;
+      })}
+    </ul>
+  </div>
+</nav>
+
+<style>
+  .forum-subnav { border-bottom: 1px solid var(--line); background: var(--white); box-shadow: 0 6px 20px rgba(7, 23, 37, .035); }
+  .forum-subnav .container { overflow-x: auto; scrollbar-width: thin; }
+  .forum-subnav ul { display: flex; width: max-content; min-width: 100%; align-items: center; gap: .2rem; padding-block: .45rem; list-style: none; }
+  .forum-subnav a { display: block; border: 1px solid transparent; border-radius: 999px; padding: .7rem 1rem; color: var(--slate); font-size: .92rem; font-weight: 750; line-height: 1.2; text-decoration: none; white-space: nowrap; }
+  .forum-subnav a:hover { border-color: var(--line); color: var(--navy-950); background: var(--paper); }
+  .forum-subnav a[aria-current='page'] { border-color: var(--navy-900); color: var(--white); background: var(--navy-900); box-shadow: 0 5px 14px rgba(7, 23, 37, .18); }
+  .forum-subnav a[aria-current='page']::before { display: inline-block; width: .42rem; height: .42rem; margin-right: .48rem; border-radius: 50%; background: var(--gold-400); content: ''; vertical-align: .08em; }
+  .forum-subnav a[aria-current='page']:hover { color: var(--white); background: var(--navy-800); }
+
+  @media (max-width: 760px) {
+    .forum-subnav a { padding: .68rem .9rem; font-size: .88rem; }
+  }
+</style>
+
+<script>
+  const forumSubnavScroller = document.querySelector<HTMLElement>('[data-forum-subnav-scroll]');
+  const currentForumLink = forumSubnavScroller?.querySelector<HTMLElement>('[aria-current="page"]');
+  if (forumSubnavScroller && currentForumLink) {
+    requestAnimationFrame(() => {
+      forumSubnavScroller.scrollLeft = currentForumLink.offsetLeft - ((forumSubnavScroller.clientWidth - currentForumLink.clientWidth) / 2);
+    });
+  }
+</script>

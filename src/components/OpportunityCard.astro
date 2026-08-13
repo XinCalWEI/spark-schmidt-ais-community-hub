@@ -1,0 +1,31 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import Icon from './Icon.astro';
+import StatusBadge from './StatusBadge.astro';
+import { formatDate } from '../lib/dates';
+import { withBase } from '../lib/urls';
+
+interface Props { entry: CollectionEntry<'opportunities'>; }
+const { entry } = Astro.props;
+const { data } = entry;
+---
+
+<article
+  class="content-card"
+  data-filter-card
+  data-type={data.type}
+  data-status={data.status}
+  data-audience={data.audiences.join('|')}
+>
+  <div class="content-card-body">
+    <div class="card-topline"><span class="card-kicker">{data.organization}</span><StatusBadge status={data.status}/></div>
+    <h3><a href={withBase(`opportunities/${entry.id}/`)}>{data.title}</a></h3>
+    <p class="card-summary">{data.summary}</p>
+    <div class="card-meta">
+      <span><Icon name="calendar" size={15}/>{data.rolling ? 'Rolling deadline' : data.deadlineLabel ? `Deadline ${data.deadlineLabel}` : data.deadline ? `Deadline ${formatDate(data.deadline)}` : 'See official announcement'}</span>
+      {data.awardAmount && <span><Icon name="spark" size={15}/>{data.awardAmount}</span>}
+      {data.locations.length > 0 && <span><Icon name="location" size={15}/>{data.locations.join(', ')}</span>}
+    </div>
+    <div class="card-footer"><span>{data.type}</span><Icon name="arrow-right" size={17}/></div>
+  </div>
+</article>

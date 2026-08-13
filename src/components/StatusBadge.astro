@@ -1,0 +1,33 @@
+---
+interface Props {
+  status: string;
+  label?: string;
+}
+
+const { status, label } = Astro.props;
+const labels: Record<string, string> = {
+  preview: 'Site preview',
+  planning: 'Planning',
+  illustrative: 'Program preview',
+  confirmed: 'Confirmed',
+  changed: 'Changed',
+  open: 'Open',
+  rolling: 'Rolling',
+  'closing-soon': 'Closing soon',
+  expired: 'Expired',
+  available: 'Available',
+  planned: 'Planned',
+  archived: 'Archived',
+  upcoming: 'Upcoming',
+  'in-progress': 'In progress',
+  completed: 'Completed',
+  cancelled: 'Cancelled',
+  'not-open': 'Not yet open',
+};
+const resolvedLabel = label ?? labels[status] ?? status;
+---
+
+<span class={`status-badge status-${status}`}>
+  <span class="status-dot" aria-hidden="true"></span>
+  {resolvedLabel}
+</span>

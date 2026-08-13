@@ -1,0 +1,29 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import Icon from './Icon.astro';
+import StatusBadge from './StatusBadge.astro';
+import { withBase } from '../lib/urls';
+
+interface Props { entry: CollectionEntry<'resources'>; }
+const { entry } = Astro.props;
+const { data } = entry;
+---
+
+<article
+  class="content-card"
+  data-filter-card
+  data-type={data.type}
+  data-level={data.level}
+  data-topic={data.topics.join('|')}
+>
+  <div class="content-card-body">
+    <div class="card-topline">
+      <span class="card-kicker">{data.type.replace('-', ' ')}</span>
+      <StatusBadge status={data.status}/>
+    </div>
+    <h3><a href={withBase(`resources/${entry.id}/`)}>{data.title}</a></h3>
+    <p class="card-summary">{data.summary}</p>
+    {data.topics.length > 0 && <div class="card-tags">{data.topics.slice(0, 3).map((topic) => <span class="tag">{topic}</span>)}</div>}
+    <div class="card-footer"><span>{data.level.replace('-', ' ')}</span><Icon name="arrow-right" size={17}/></div>
+  </div>
+</article>

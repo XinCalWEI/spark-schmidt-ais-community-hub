@@ -1,0 +1,93 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import CTASection from '../../../components/CTASection.astro';
+import ForumSubnav from '../../../components/ForumSubnav.astro';
+import Icon from '../../../components/Icon.astro';
+import PageHero from '../../../components/PageHero.astro';
+import SectionHeading from '../../../components/SectionHeading.astro';
+import { forumFacts } from '../../../data/site';
+import { withBase } from '../../../lib/urls';
+
+const layers = [
+  ['Frame', 'Cross-sector collaboration and responsible research translation', 'Examine how stakeholder needs, societal impact, AI ethics, alignment, participation, and incentives shape whether scientific AI succeeds in practice.'],
+  ['Explore', 'Conceptual foundations in emerging AI', 'Develop shared understanding of multimodal AI, foundation models, knowledge-guided ML, HCI, open tools, and scientific applications.'],
+  ['Build', 'Practical skills and collaborative prototyping', 'Strengthen reproducible research practice and apply it in interdisciplinary teams working toward a realistic concrete deliverable.'],
+  ['Connect', 'Mentorship, reflection, and community', 'Build relationships across disciplines, institutions, cohorts, career stages, and sectors through structured and informal exchange.'],
+];
+
+const translationPriorities = [
+  ['Translate research', 'Connect scientific advances with real needs, users, decisions, and pathways to adoption.'],
+  ['Practice responsibility', 'Bring ethics, alignment, participation, and accountability into the research lifecycle.'],
+  ['Build reproducibly', 'Create scientific work that is maintainable, shareable, inspectable, and ready for collaboration.'],
+  ['Cross boundaries', 'Learn with people from academia, government, industry, nonprofits, laboratories, and communities.'],
+];
+---
+
+<BaseLayout title="SPARK Forum 2026" description="A focused forum for responsible research translation, practical AI skills, collaborative prototyping, and community connection.">
+  <PageHero eyebrow="SPARK Forum 2026" title="A retreat for responsible research translation and cross-sector collaboration." description="A focused gathering designed around one connected journey: understand real-world challenges, explore relevant AI methods, learn practical tools, build collaborative prototypes, and reflect on pathways from research to impact." status="planning">
+    <div slot="actions" class="page-actions"><a class="button button-gold" href={withBase('forum/2026/participate/')}>Participation updates <Icon name="arrow-right" size={18}/></a><a class="button button-outline-light" href={withBase('forum/2026/program/')}>View program preview</a></div>
+    <aside slot="aside" class="forum-fact-card"><div><small>Date</small><strong>{forumFacts.dateLabel}</strong></div><div><small>Location</small><strong>{forumFacts.locationLabel}</strong></div><div><small>Applications</small><strong>Not yet open</strong></div></aside>
+  </PageHero>
+  <ForumSubnav />
+
+  <section class="section section-white">
+    <div class="container">
+      <div class="intro-grid">
+        <SectionHeading eyebrow="Why this forum" title="Research translation is not a final handoff." description="SPARK encourages participants to consider stakeholders, values, constraints, reproducibility, and adoption from the beginning of the research lifecycle—not only after the technical work is complete." />
+        <div class="prose intro-prose">
+          <p>The forum is being designed primarily for current and alumni Schmidt AI in Science Fellows from diverse scientific backgrounds and levels of AI experience. Selected collaborators from government, industry, national laboratories, nonprofit organizations, and other sectors may also be invited to contribute practical perspectives and project contexts.</p>
+          <p>SPARK is neither a conventional conference nor a high-pressure hackathon. It combines a retreat, workshop, community gathering, and supported collaborative prototyping experience.</p>
+        </div>
+      </div>
+      <ol class="translation-priorities" aria-label="Four priorities for the Forum">
+        {translationPriorities.map(([title, text], index) => (
+          <li><span>{String(index + 1).padStart(2, '0')}</span><div><h3>{title}</h3><p>{text}</p></div></li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionHeading eyebrow="Program model" title="Four connected layers—from shared understanding to practical action." description="The multi-layer format welcomes different disciplines and levels of AI experience while connecting responsible problem framing with methods, implementation, hands-on work, and lasting relationships." />
+      <div class="forum-layer-list">
+        {layers.map((layer, index) => <article><span>{String(index + 1).padStart(2, '0')}</span><div><small>{layer[0]}</small><h3>{layer[1]}</h3><p>{layer[2]}</p></div></article>)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-navy">
+    <div class="container expect-grid">
+      <SectionHeading eyebrow="Participant experience" title="What participants can expect." description="The exact format is still being developed. The current design combines multiple modes of learning and connection." />
+      <ul class="check-list">
+        {['Expert-led talks and facilitated discussions','Conceptual introductions to emerging AI methods','Hands-on training in reproducible research tools','Small, interdisciplinary project teams','Lightweight prototype or deliverable development','Alumni and current Fellow mentorship','Career and cross-sector conversations','Informal time for reflection and relationship-building'].map((item) => <li><span><Icon name="check" size={16}/></span>{item}</li>)}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section-white">
+    <div class="container outcomes-grid">
+      <div><p class="eyebrow"><span aria-hidden="true"></span>Beyond the Forum</p><h2>Useful work that can continue and remain accessible.</h2><p>Subject to participant consent, permissions, accessibility review, and licensing, selected learning materials, project outputs, and public syntheses will be preserved through the SPARK Community Hub rather than disappearing after the event.</p><div class="outcome-links"><a href={withBase('resources/')}>Explore resources <Icon name="arrow-right" size={17}/></a><a href={withBase('stories/')}>Read community stories <Icon name="arrow-right" size={17}/></a></div></div>
+      <div class="outcome-cards">
+        <article><Icon name="people" size={21}/><h3>Relationships</h3><p>Cross-cohort mentorship and collaboration connections.</p></article>
+        <article><Icon name="code" size={21}/><h3>Open learning</h3><p>Tutorials, practical guides, and documented prototypes.</p></article>
+        <article><Icon name="document" size={21}/><h3>Public synthesis</h3><p>Reports, stories, interviews, and a potential perspective article.</p></article>
+        <article><Icon name="calendar" size={21}/><h3>Follow-on activity</h3><p>Alumni talks, project continuation, and community events.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section"><div class="container"><CTASection eyebrow="Forum status" title="Planning is underway." description={`The location is confirmed as ${forumFacts.locationLabel}, and the current planning window is ${forumFacts.dateLabel.toLowerCase()}. Exact dates, the specific venue, eligibility, participant support, and speakers will be published after confirmation. Please do not make travel plans based on draft proposal materials.`}><a class="button button-gold" href={withBase('forum/2026/participate/')}>How to stay informed <Icon name="arrow-right" size={18}/></a><a class="button button-outline-light" href={withBase('forum/2026/faq/')}>Read the FAQ</a></CTASection></div></section>
+</BaseLayout>
+
+<style>
+  .forum-fact-card{min-width:280px;border:1px solid rgba(255,255,255,.18);border-radius:var(--radius);background:rgba(255,255,255,.06);padding:.25rem 1.2rem}.forum-fact-card div{padding:.9rem 0;border-top:1px solid rgba(255,255,255,.13)}.forum-fact-card div:first-child{border:0}.forum-fact-card small,.forum-fact-card strong{display:block}.forum-fact-card small{color:#9fb2bd;font-size:.65rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase}.forum-fact-card strong{color:white;font-size:.9rem}
+  .intro-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:clamp(3rem,8vw,7rem)}.intro-grid .section-heading{margin:0}.intro-prose{padding-top:.2rem}
+  .translation-priorities{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));margin-top:clamp(2.5rem,5vw,4rem);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;list-style:none}.translation-priorities li{display:grid;grid-template-columns:auto minmax(0,1fr);gap:.8rem;min-height:180px;padding:1.25rem;background:#fff}.translation-priorities li+li{border-left:1px solid var(--line)}.translation-priorities li>span{color:var(--gold-700);font-family:var(--font-display);font-size:.75rem;font-weight:800}.translation-priorities h3{font-size:1rem}.translation-priorities p{margin-top:.55rem;color:var(--slate);font-size:.82rem;line-height:1.65}
+  .forum-layer-list{border-top:1px solid var(--line)}.forum-layer-list article{display:grid;grid-template-columns:7rem 1fr;gap:2rem;border-bottom:1px solid var(--line);padding:1.8rem 0}.forum-layer-list article>span{color:#b0bbc0;font-family:var(--font-display);font-size:2.5rem;font-weight:700}.forum-layer-list small{color:var(--gold-700);font-size:.7rem;font-weight:850;letter-spacing:.1em;text-transform:uppercase}.forum-layer-list h3{margin-top:.35rem}.forum-layer-list p{max-width:75ch;margin-top:.55rem;color:var(--slate);font-size:.91rem}
+  .expect-grid{display:grid;grid-template-columns:.85fr 1.15fr;gap:clamp(3rem,8vw,7rem)}.check-list{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;list-style:none}.check-list li{display:flex;align-items:flex-start;gap:.65rem;border:1px solid rgba(255,255,255,.13);border-radius:.75rem;background:rgba(255,255,255,.045);padding:1rem;color:#d3dee4;font-size:.86rem}.check-list span{display:grid;width:1.45rem;height:1.45rem;flex:none;place-items:center;border-radius:50%;background:var(--gold-400);color:var(--navy-950)}
+  .outcomes-grid{display:grid;grid-template-columns:.85fr 1.15fr;gap:clamp(3rem,8vw,7rem);align-items:start}.outcomes-grid>div:first-child h2{margin-top:.7rem}.outcomes-grid>div:first-child>p:not(.eyebrow){margin-top:1rem;color:var(--slate)}.outcome-cards{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}.outcome-cards article{min-height:190px;padding:1.3rem}.outcome-cards article:nth-child(even){border-left:1px solid var(--line)}.outcome-cards article:nth-child(n+3){border-top:1px solid var(--line)}.outcome-cards .icon{color:var(--gold-700);margin-bottom:1.5rem}.outcome-cards h3{font-size:1.05rem}.outcome-cards p{margin-top:.45rem;color:var(--slate);font-size:.82rem}
+  .outcome-links{display:flex;flex-wrap:wrap;gap:.65rem 1.2rem;margin-top:1.25rem}.outcome-links a{display:inline-flex;min-height:44px;align-items:center;gap:.35rem;font-size:.84rem;font-weight:800}
+  @media(max-width:1023px){.translation-priorities{grid-template-columns:1fr 1fr}.translation-priorities li+li{border-left:0;border-top:1px solid var(--line)}.translation-priorities li:nth-child(even){border-left:1px solid var(--line)}}
+  @media(max-width:760px){.intro-grid,.expect-grid,.outcomes-grid,.translation-priorities{grid-template-columns:1fr}.translation-priorities li{min-height:0}.translation-priorities li:nth-child(even){border-left:0}.forum-layer-list article{grid-template-columns:3rem 1fr;gap:1rem}.forum-layer-list article>span{font-size:1.5rem}.check-list{grid-template-columns:1fr}.outcome-cards{grid-template-columns:1fr}.outcome-cards article:nth-child(even){border-left:0}.outcome-cards article+article{border-top:1px solid var(--line)}.forum-fact-card{min-width:0;width:100%}}
+</style>

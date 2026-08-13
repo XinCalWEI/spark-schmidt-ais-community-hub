@@ -1,0 +1,30 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import CollectionFilter from '../../components/CollectionFilter.astro';
+import EmptyState from '../../components/EmptyState.astro';
+import Icon from '../../components/Icon.astro';
+import PageHero from '../../components/PageHero.astro';
+import ResourceCard from '../../components/ResourceCard.astro';
+import { withBase } from '../../lib/urls';
+
+const entries = (await getCollection('resources', ({ data }) => !data.draft && data.status !== 'archived')).sort((a,b) => a.data.title.localeCompare(b.data.title));
+const typeOptions = [...new Set(entries.map(e => e.data.type))].sort().map(value => ({ value, label: value.replace('-', ' ') }));
+const levelOptions = [...new Set(entries.map(e => e.data.level))].sort().map(value => ({ value, label: value.replace('-', ' ') }));
+---
+
+<BaseLayout title="Resources" description="Reviewed tutorials, tools, code, data, recordings, and research translation materials for the SPARK community.">
+  <PageHero eyebrow="Community hub" title="Resources for responsible, reproducible AI in science." description="Explore practical materials for research translation, open scientific practice, emerging methods, collaboration, and implementation. Initial listings point to authoritative external sources; original Forum outputs will be added after review." compact>
+    <div slot="actions" class="page-actions"><a class="button button-gold" href={withBase('resources/submit/')}>Suggest a resource <Icon name="arrow-right" size={18}/></a></div>
+  </PageHero>
+  <section class="section section-white"><div class="container collection-browser" data-collection-browser>
+    {entries.length > 0 ? <>
+      <CollectionFilter count={entries.length} searchPlaceholder="Search titles, topics, and descriptions" filters={[{key:'type',label:'Type',options:typeOptions},{key:'level',label:'Level',options:levelOptions}]}/>
+      <div class="card-grid">{entries.map(entry => <ResourceCard entry={entry}/>)}</div>
+      <div data-filter-empty hidden><EmptyState title="No resources match those filters." description="Try a broader search or clear the selected filters." icon="search" /></div>
+    </> : <EmptyState title="The resource library is being prepared." description="Reviewed tutorials, tools, project artifacts, recordings, and reports will appear here." icon="document"><a class="button button-primary" href={withBase('resources/submit/')}>Suggest a resource</a></EmptyState>}
+  </div></section>
+  <section class="section"><div class="narrow curation-note"><Icon name="check" size={22}/><div><h2>What listing means</h2><p>Resources are selected for relevance and link validity. A listing is not necessarily an endorsement. Readers should review the original source, license, privacy terms, costs, research claims, and institutional policies before use.</p></div></div></section>
+</BaseLayout>
+
+<style>.curation-note{display:grid;grid-template-columns:3rem 1fr;gap:1rem;border-top:1px solid var(--line);padding-top:2rem}.curation-note>.icon{color:var(--gold-700)}.curation-note h2{font-size:1.2rem}.curation-note p{margin-top:.5rem;color:var(--slate);font-size:.9rem}</style>

@@ -1,0 +1,22 @@
+---
+import Icon from './Icon.astro';
+import { withBase } from '../lib/urls';
+
+interface Crumb { label: string; href?: string; }
+interface Props { items: Crumb[]; light?: boolean; }
+const { items, light = false } = Astro.props;
+---
+
+<nav class:list={['breadcrumbs', { 'breadcrumbs-light': light }]} aria-label="Breadcrumb">
+  <ol>
+    <li><a href={withBase('about/')}>About</a></li>
+    {items.map((item, index) => (
+      <li>
+        <Icon name="chevron-right" size={14}/>
+        {item.href && index < items.length - 1
+          ? <a href={withBase(item.href)}>{item.label}</a>
+          : <span aria-current="page">{item.label}</span>}
+      </li>
+    ))}
+  </ol>
+</nav>

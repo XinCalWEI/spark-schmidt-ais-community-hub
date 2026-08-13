@@ -1,0 +1,13 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import EmptyState from '../../components/EmptyState.astro';
+import EventCard from '../../components/EventCard.astro';
+import PageHero from '../../components/PageHero.astro';
+const entries=(await getCollection('events',({data})=>!data.draft&&['completed','cancelled'].includes(data.status))).sort((a,b)=>(b.data.startAt?.getTime()??0)-(a.data.startAt?.getTime()??0));
+---
+
+<BaseLayout title="Event Archive" description="Past SPARK community events and their available materials.">
+  <PageHero eyebrow="Events" title="Past events and lasting materials." description="Completed events will be archived with recordings, slides, transcripts, repositories, or reports when sharing is permitted and the materials are ready." compact />
+  <section class="section section-white"><div class="container">{entries.length>0?<div class="card-grid">{entries.map(entry=><EventCard entry={entry}/>)}</div>:<EmptyState title="The archive is empty." description="Past events and approved materials will appear here after the first activities are completed." icon="calendar"/>}</div></section>
+</BaseLayout>

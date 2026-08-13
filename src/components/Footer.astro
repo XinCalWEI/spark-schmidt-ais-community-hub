@@ -1,0 +1,50 @@
+---
+import Icon from './Icon.astro';
+import {
+  affiliationNote,
+  fundingAcknowledgement,
+  siteConfig,
+  websiteCreator,
+} from '../data/site';
+import { withBase } from '../lib/urls';
+---
+
+<footer class="site-footer">
+  <div class="container footer-main">
+    <div class="footer-brand">
+      <a class="brand brand-footer" href={withBase('about/')} aria-label="About SPARK">
+        <span class="brand-symbol" aria-hidden="true"><Icon name="spark" size={22}/></span>
+        <span class="brand-copy"><strong>SPARK</strong><small>Community Hub</small></span>
+      </a>
+      <p>{affiliationNote}</p>
+      <p class="footer-funding">{fundingAcknowledgement}</p>
+    </div>
+    <div class="footer-column">
+      <h2>Explore</h2>
+      <a href={withBase('forum/2026/')}>Forum 2026</a>
+      <a href={withBase('opportunities/')}>Opportunities</a>
+      <a href={withBase('resources/')}>Resources</a>
+      <a href={withBase('events/')}>Events</a>
+    </div>
+    <div class="footer-column">
+      <h2>Community</h2>
+      <a href={withBase('fellows/')}>Schmidt AI in Science Fellows</a>
+      <a href={withBase('stories/')}>Stories</a>
+      <a href={withBase('contribute/')}>Contribute</a>
+      <a href={withBase('about/team/')}>Organizing team</a>
+      <a href={`mailto:${siteConfig.contactEmail}`}>Contact</a>
+    </div>
+    <div class="footer-column">
+      <h2>Trust</h2>
+      <a href={withBase('code-of-conduct/')}>Code of conduct</a>
+      <a href={withBase('accessibility/')}>Accessibility</a>
+      <a href={withBase('privacy/')}>Privacy</a>
+      <a href={siteConfig.githubUrl} target="_blank" rel="noopener noreferrer">GitHub <Icon name="external" size={14}/></a>
+    </div>
+  </div>
+  <div class="container footer-bottom">
+    <p>© {new Date().getFullYear()} SPARK organizing team.</p>
+    <p class="footer-site-credit">Website created by <a href={websiteCreator.profileUrl} target="_blank" rel="noopener noreferrer">{websiteCreator.name}</a> at {websiteCreator.affiliation}.</p>
+    <p>Last updated <time datetime={siteConfig.lastUpdated}>August 12, 2026</time>.</p>
+  </div>
+</footer>

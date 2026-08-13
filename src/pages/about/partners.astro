@@ -1,0 +1,15 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Icon from '../../components/Icon.astro';
+import PageHero from '../../components/PageHero.astro';
+import SectionHeading from '../../components/SectionHeading.astro';
+import { siteConfig } from '../../data/site';
+---
+
+<BaseLayout title="Partnership Approach" description="How SPARK approaches cross-sector collaboration and public partner recognition.">
+  <PageHero eyebrow="About · Collaboration" title="Partnership begins before the handoff." description="SPARK treats cross-sector collaboration as part of research design: partners help frame needs, constraints, responsibilities, implementation pathways, and useful outputs from the beginning." compact />
+  <section class="section section-white"><div class="container"><SectionHeading eyebrow="Potential collaborators" title="Different sectors bring different forms of knowledge." description="The proposed Forum aims to include perspectives from several settings. Organizations will be named or shown with logos only after participation, affiliation wording, and brand permissions are confirmed."/><div class="card-grid"><article class="icon-card"><span class="icon-card-icon"><Icon name="document" size={22}/></span><h3>Academia</h3><p>Scientific methods, critical inquiry, domain expertise, education, and long-term research infrastructure.</p></article><article class="icon-card"><span class="icon-card-icon"><Icon name="globe" size={22}/></span><h3>Government and laboratories</h3><p>Public missions, operational needs, authoritative data, policy context, continuity, and decision workflows.</p></article><article class="icon-card"><span class="icon-card-icon"><Icon name="code" size={22}/></span><h3>Industry and nonprofits</h3><p>Implementation capacity, product and service experience, community relationships, resources, and paths to scale.</p></article></div></div></section>
+  <section class="section"><div class="container partner-policy"><div><p class="eyebrow"><span aria-hidden="true"></span>Publication policy</p><h2>Recognition follows confirmation.</h2></div><div class="prose"><p>Organizations mentioned in proposal drafts or exploratory conversations are not automatically confirmed partners. The public website will distinguish among invited speakers, participating organizations, funders, service providers, and formal partners.</p><p>Logos will not be copied from the web. The team will request approved files, usage guidance, alt text, and the wording needed to describe each relationship accurately.</p><p>To discuss a possible contribution or collaboration, contact <a href={`mailto:${siteConfig.contactEmail}?subject=SPARK%20collaboration`}>{siteConfig.contactEmail}</a>.</p></div></div></section>
+</BaseLayout>
+
+<style>.partner-policy{display:grid;grid-template-columns:.8fr 1.2fr;gap:clamp(3rem,8vw,7rem)}.partner-policy h2{margin-top:.7rem}@media(max-width:760px){.partner-policy{grid-template-columns:1fr}}</style>

@@ -1,0 +1,11 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Icon from '../../components/Icon.astro';
+import PageHero from '../../components/PageHero.astro';
+import { siteConfig } from '../../data/site';
+---
+
+<BaseLayout title="Suggest an Opportunity" description="How to suggest an opportunity for the SPARK Community Hub.">
+  <PageHero eyebrow="Contribute" title="Help the community find high-value opportunities." description="A structured submission and review workflow is under development. Until then, you may email a public official link and a concise relevance note." status="planning" compact><div slot="actions" class="page-actions"><a class="button button-gold" href={`mailto:${siteConfig.contactEmail}?subject=SPARK%20opportunity%20suggestion`}>Email a suggestion <Icon name="mail" size={18}/></a></div></PageHero>
+  <section class="section section-white"><div class="narrow prose"><h2>What to include</h2><ul><li>Official opportunity title and organization.</li><li>Direct official URL—not a social-media repost or search result.</li><li>Opportunity type and intended audience.</li><li>Exact deadline, including time zone, or confirmation that it is rolling.</li><li>A short explanation of its relevance to AI in Science Fellows or alumni.</li></ul><h2>What happens next</h2><p>The organizing team will check relevance, source quality, deadline, basic accessibility, and link validity before deciding whether to publish. A listing is not an endorsement, and submission does not guarantee publication.</p><blockquote>Send only public information. Do not email applications, CVs, recommendation letters, private contact lists, or other personal data.</blockquote></div></section>
+</BaseLayout>
