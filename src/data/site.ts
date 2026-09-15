@@ -6,18 +6,19 @@ export const siteConfig = {
   contactEmail: 'xincwei@umich.edu',
   githubUrl: 'https://github.com/XinCalWEI/spark-schmidt-ais-community-hub',
   status: 'preview' as const,
-  lastUpdated: '2026-08-12',
+  lastUpdated: '2026-09-14',
 };
 
 export const forumFacts = {
-  year: 2026,
-  title: 'SPARK Forum 2026',
+  title: 'SPARK Forum',
   subtitle: 'A Retreat for Responsible Research Translation and Cross-Sector Collaboration',
   status: 'planning' as const,
-  dateLabel: 'Late 2026 or early 2027',
+  dateLabel: 'March 7–12, 2027 (tentative)',
+  scheduleNote: 'March 7: participant check-in only. March 8–12: main program.',
   dateIso: null as string | null,
   locationLabel: 'Ann Arbor, Michigan',
   applicationStatus: 'not-open' as const,
+  applicationStatusLabel: 'Not yet open — stay tuned.',
   applicationDeadline: null as string | null,
   applicationUrl: null as string | null,
 };

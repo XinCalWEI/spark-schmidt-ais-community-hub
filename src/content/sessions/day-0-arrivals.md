@@ -1,21 +1,17 @@
 ---
-title: Arrivals and community welcome
-summary: A low-pressure opening designed to help participants meet across cohorts, institutions, disciplines, and sectors.
+title: Participant check-in
+summary: A day for participants to arrive, check in, and settle in before the main program begins.
 day: 0
 order: 0
-dayTitle: Participant arrivals and welcome reception
+dayTitle: Participant check-in only
 format: welcome
 status: illustrative
-tags: [Community]
+tags: []
 schedule:
-  - time: Arrival time to be confirmed
-    title: Participant arrivals
+  - time: Check-in time to be confirmed
+    title: Participant check-in
     kind: arrival
-    description: Arrival and check-in details will be published after the exact venue and transportation plan are confirmed.
-  - time: 6:00 PM–8:00 PM
-    title: Welcome reception
-    kind: community
-    description: An informal opening for participants to meet and settle into the Forum before the full program begins.
+    description: This day is reserved for participant arrival and check-in only. Practical details will be shared once the venue and transportation arrangements are confirmed.
 ---
 
-The welcome period creates room for informal introductions and helps participants enter the program with a sense of shared purpose.
+Participants can arrive, check in, and settle in before the main program begins the following day. Check-in times will be announced once arrangements are confirmed.

@@ -111,23 +111,25 @@ const specialThanksGroups = [
   <section class="forum-feature-section" aria-labelledby="forum-feature-title">
     <div class="container forum-feature-panel">
       <div class="forum-feature-masthead">
-        <p class="eyebrow eyebrow-light"><span aria-hidden="true"></span>Forum 2026</p>
+        <p class="eyebrow eyebrow-light"><span aria-hidden="true"></span>{forumFacts.title}</p>
         <span class="forum-planning-status"><span aria-hidden="true"></span>Planning in progress</span>
         <h2 id="forum-feature-title">{forumFacts.subtitle}</h2>
       </div>
       <div class="forum-feature-overview">
         <p>SPARK will bring current and alumni Schmidt AI in Science Fellows together with cross-sector collaborators to explore how research moves into practice—through shared problem framing, emerging AI methods, hands-on skills, small-group projects, mentorship, and reflection.</p>
         <div class="forum-feature-actions">
-          <a class="button button-gold" href={withBase('forum/2026/')}>Explore Forum 2026 <Icon name="arrow-right" size={18} /></a>
-          <a class="button button-outline-light" href={withBase('forum/2026/program/')}>Preview the program</a>
+          <a class="button button-gold" href={withBase('forum/')}>Explore the Forum <Icon name="arrow-right" size={18} /></a>
+          <a class="button button-outline-light" href={withBase('forum/program/')}>Preview the program</a>
         </div>
       </div>
 
       <dl class="forum-feature-facts">
         <div><dt>Location</dt><dd>{forumFacts.locationLabel}</dd></div>
-        <div><dt>Planning window</dt><dd>{forumFacts.dateLabel}</dd></div>
+        <div><dt>Dates</dt><dd>{forumFacts.dateLabel}</dd></div>
         <div><dt>Status</dt><dd>Program in development</dd></div>
       </dl>
+
+      <p class="forum-feature-schedule">{forumFacts.scheduleNote}</p>
 
       <div class="forum-feature-journey" aria-labelledby="forum-journey-title">
         <div class="forum-journey-heading">
@@ -139,9 +141,9 @@ const specialThanksGroups = [
         </div>
         <div class="forum-journey-flow">
           <aside class="forum-arrival">
-            <span>Arrival evening</span>
-            <strong>Welcome & connect</strong>
-            <small>Settle in and meet the community.</small>
+            <span>Check-in day</span>
+            <strong>March 7</strong>
+            <small>Participant check-in only. The main program begins March 8.</small>
           </aside>
           <ol aria-label="Forum program arc, days 1 through 5">
             {forumJourney.map(([day, focus], index) => (
@@ -308,6 +310,7 @@ const specialThanksGroups = [
   .forum-journey-heading h3 { margin-top: .35rem; color: #fff; font-size: clamp(1.15rem, 2vw, 1.5rem); letter-spacing: -.02em; }
   .forum-journey-heading > span { color: #aebfc8; font-size: .76rem; }
   .forum-journey-flow { display: grid; grid-template-columns: minmax(10rem, .85fr) minmax(0, 4.15fr); align-items: stretch; gap: 1.25rem; }
+  .forum-feature-schedule { color: #bdcbd2; font-size: .88rem; line-height: 1.6; }
   .forum-arrival { display: grid; align-content: center; gap: .3rem; border: 1px solid rgba(228, 185, 73, .55); border-radius: var(--radius); background: linear-gradient(145deg, rgba(228, 185, 73, .2), rgba(228, 185, 73, .07)); padding: 1.15rem; }
   .forum-arrival span { color: var(--gold-200); font-size: .68rem; font-weight: 850; letter-spacing: .08em; text-transform: uppercase; }
   .forum-arrival strong { color: #fff; font-size: .93rem; }

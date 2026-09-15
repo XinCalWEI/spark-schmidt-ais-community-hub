@@ -56,6 +56,10 @@ See [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) for the GitHub website steps.
 - Stories: `src/content/stories/`
 - Program preview: `src/content/sessions/`
 
+The Forum uses year-independent URLs: `/forum/` and `/events/spark-forum/`.
+The original `/forum/2026/` pages and `/events/spark-forum-2026/` redirect to their current equivalents, including on GitHub project Pages.
+Keep the planning date in `src/data/site.ts` and `src/content/events/spark-forum.md` consistent; historical publication and funding dates should retain their original years.
+
 See [docs/CONTENT-GUIDE.md](docs/CONTENT-GUIDE.md) before publishing.
 
 ## Important publication rule

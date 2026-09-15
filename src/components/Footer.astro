@@ -7,6 +7,7 @@ import {
   websiteCreator,
 } from '../data/site';
 import { withBase } from '../lib/urls';
+import { formatDate } from '../lib/dates';
 ---
 
 <footer class="site-footer">
@@ -21,7 +22,7 @@ import { withBase } from '../lib/urls';
     </div>
     <div class="footer-column">
       <h2>Explore</h2>
-      <a href={withBase('forum/2026/')}>Forum 2026</a>
+      <a href={withBase('forum/')}>Forum</a>
       <a href={withBase('opportunities/')}>Opportunities</a>
       <a href={withBase('resources/')}>Resources</a>
       <a href={withBase('events/')}>Events</a>
@@ -45,6 +46,6 @@ import { withBase } from '../lib/urls';
   <div class="container footer-bottom">
     <p>© {new Date().getFullYear()} SPARK organizing team.</p>
     <p class="footer-site-credit">Website created by <a href={websiteCreator.profileUrl} target="_blank" rel="noopener noreferrer">{websiteCreator.name}</a> at {websiteCreator.affiliation}.</p>
-    <p>Last updated <time datetime={siteConfig.lastUpdated}>August 12, 2026</time>.</p>
+    <p>Last updated <time datetime={siteConfig.lastUpdated}>{formatDate(new Date(siteConfig.lastUpdated), { month: 'long' })}</time>.</p>
   </div>
 </footer>

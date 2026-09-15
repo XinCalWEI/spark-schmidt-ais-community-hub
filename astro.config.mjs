@@ -10,7 +10,10 @@ export default defineConfig({
   site,
   base,
   trailingSlash: 'always',
-  integrations: [sitemap()],
+  integrations: [sitemap({
+    // Legacy redirects should remain reachable, but not appear as search results.
+    filter: (page) => !/\/(?:forum\/2026(?:\/|$)|events\/spark-forum-2026(?:\/|$))/.test(new URL(page).pathname),
+  })],
   vite: {
     build: {
       cssMinify: true,

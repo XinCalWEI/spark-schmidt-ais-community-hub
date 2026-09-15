@@ -1,12 +1,12 @@
 ---
-import BaseLayout from '../../../layouts/BaseLayout.astro';
-import CTASection from '../../../components/CTASection.astro';
-import ForumSubnav from '../../../components/ForumSubnav.astro';
-import Icon from '../../../components/Icon.astro';
-import PageHero from '../../../components/PageHero.astro';
-import SectionHeading from '../../../components/SectionHeading.astro';
-import { forumFacts } from '../../../data/site';
-import { withBase } from '../../../lib/urls';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import CTASection from '../../components/CTASection.astro';
+import ForumSubnav from '../../components/ForumSubnav.astro';
+import Icon from '../../components/Icon.astro';
+import PageHero from '../../components/PageHero.astro';
+import SectionHeading from '../../components/SectionHeading.astro';
+import { forumFacts } from '../../data/site';
+import { withBase } from '../../lib/urls';
 
 const layers = [
   ['Frame', 'Cross-sector collaboration and responsible research translation', 'Examine how stakeholder needs, societal impact, AI ethics, alignment, participation, and incentives shape whether scientific AI succeeds in practice.'],
@@ -23,10 +23,10 @@ const translationPriorities = [
 ];
 ---
 
-<BaseLayout title="SPARK Forum 2026" description="A focused forum for responsible research translation, practical AI skills, collaborative prototyping, and community connection.">
-  <PageHero eyebrow="SPARK Forum 2026" title="A retreat for responsible research translation and cross-sector collaboration." description="A focused gathering designed around one connected journey: understand real-world challenges, explore relevant AI methods, learn practical tools, build collaborative prototypes, and reflect on pathways from research to impact." status="planning">
-    <div slot="actions" class="page-actions"><a class="button button-gold" href={withBase('forum/2026/participate/')}>Participation updates <Icon name="arrow-right" size={18}/></a><a class="button button-outline-light" href={withBase('forum/2026/program/')}>View program preview</a></div>
-    <aside slot="aside" class="forum-fact-card"><div><small>Date</small><strong>{forumFacts.dateLabel}</strong></div><div><small>Location</small><strong>{forumFacts.locationLabel}</strong></div><div><small>Applications</small><strong>Not yet open</strong></div></aside>
+<BaseLayout title="SPARK Forum" description="A focused forum for responsible research translation, practical AI skills, collaborative prototyping, and community connection.">
+  <PageHero eyebrow="SPARK Forum" title="A retreat for responsible research translation and cross-sector collaboration." description="A focused gathering designed around one connected journey: understand real-world challenges, explore relevant AI methods, learn practical tools, build collaborative prototypes, and reflect on pathways from research to impact." status="planning">
+    <div slot="actions" class="page-actions"><a class="button button-gold" href={withBase('forum/participate/')}>Participation updates <Icon name="arrow-right" size={18}/></a><a class="button button-outline-light" href={withBase('forum/program/')}>View program preview</a></div>
+    <aside slot="aside" class="forum-fact-card"><div><small>Dates</small><strong>{forumFacts.dateLabel}</strong><p class="forum-schedule-note">{forumFacts.scheduleNote}</p></div><div><small>Location</small><strong>{forumFacts.locationLabel}</strong></div><div><small>Applications</small><strong>{forumFacts.applicationStatusLabel}</strong></div></aside>
   </PageHero>
   <ForumSubnav />
 
@@ -77,10 +77,11 @@ const translationPriorities = [
     </div>
   </section>
 
-  <section class="section"><div class="container"><CTASection eyebrow="Forum status" title="Planning is underway." description={`The location is confirmed as ${forumFacts.locationLabel}, and the current planning window is ${forumFacts.dateLabel.toLowerCase()}. Exact dates, the specific venue, eligibility, participant support, and speakers will be published after confirmation. Please do not make travel plans based on draft proposal materials.`}><a class="button button-gold" href={withBase('forum/2026/participate/')}>How to stay informed <Icon name="arrow-right" size={18}/></a><a class="button button-outline-light" href={withBase('forum/2026/faq/')}>Read the FAQ</a></CTASection></div></section>
+  <section class="section"><div class="container"><CTASection eyebrow="Forum status" title="Planning is underway." description={`Planned dates: ${forumFacts.dateLabel}, in ${forumFacts.locationLabel}. ${forumFacts.scheduleNote} The dates, specific venue, eligibility, participant support, and speakers will be confirmed before travel arrangements should be made.`}><a class="button button-gold" href={withBase('forum/participate/')}>How to stay informed <Icon name="arrow-right" size={18}/></a><a class="button button-outline-light" href={withBase('forum/faq/')}>Read the FAQ</a></CTASection></div></section>
 </BaseLayout>
 
 <style>
+  .forum-schedule-note { max-width: 32ch; margin-top: .5rem; color: #bdcbd2; font-size: .78rem; line-height: 1.55; }
   .forum-fact-card{min-width:280px;border:1px solid rgba(255,255,255,.18);border-radius:var(--radius);background:rgba(255,255,255,.06);padding:.25rem 1.2rem}.forum-fact-card div{padding:.9rem 0;border-top:1px solid rgba(255,255,255,.13)}.forum-fact-card div:first-child{border:0}.forum-fact-card small,.forum-fact-card strong{display:block}.forum-fact-card small{color:#9fb2bd;font-size:.65rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase}.forum-fact-card strong{color:white;font-size:.9rem}
   .intro-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:clamp(3rem,8vw,7rem)}.intro-grid .section-heading{margin:0}.intro-prose{padding-top:.2rem}
   .translation-priorities{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));margin-top:clamp(2.5rem,5vw,4rem);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;list-style:none}.translation-priorities li{display:grid;grid-template-columns:auto minmax(0,1fr);gap:.8rem;min-height:180px;padding:1.25rem;background:#fff}.translation-priorities li+li{border-left:1px solid var(--line)}.translation-priorities li>span{color:var(--gold-700);font-family:var(--font-display);font-size:.75rem;font-weight:800}.translation-priorities h3{font-size:1rem}.translation-priorities p{margin-top:.55rem;color:var(--slate);font-size:.82rem;line-height:1.65}

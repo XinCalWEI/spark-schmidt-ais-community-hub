@@ -1,0 +1,9 @@
+---
+// Keep the original shared URLs working without maintaining duplicate pages.
+export function getStaticPaths() {
+  return [undefined, 'program', 'speakers', 'projects', 'participate', 'travel-accessibility', 'faq']
+    .map((path) => ({ params: { path } }));
+}
+
+return Astro.redirect(`${import.meta.env.BASE_URL}forum/${Astro.params.path ? `${Astro.params.path}/` : ''}`, 301);
+---

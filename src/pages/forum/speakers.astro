@@ -1,0 +1,12 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import EmptyState from '../../components/EmptyState.astro';
+import ForumSubnav from '../../components/ForumSubnav.astro';
+import PageHero from '../../components/PageHero.astro';
+---
+
+<BaseLayout title="Speakers — Forum" description="Confirmed SPARK Forum speaker announcements will appear here.">
+  <PageHero eyebrow="Forum · Speakers" title="Contributors across disciplines and sectors." description="The proposed forum will bring together perspectives from the AI in Science community, academia, government, industry, national laboratories, nonprofits, and other settings." status="planning" compact />
+  <ForumSubnav />
+  <section class="section section-white"><div class="container"><EmptyState title="Speaker announcements are coming soon." description="Only people who have confirmed their participation and consented to appear publicly will be listed. Names in planning documents are not confirmations." icon="people" /></div></section>
+</BaseLayout>

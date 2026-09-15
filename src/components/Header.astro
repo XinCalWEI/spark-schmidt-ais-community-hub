@@ -6,7 +6,7 @@ import sparkLogo from '../assets/spark-logo.png';
 
 const navItems = [
   { label: 'About', href: 'about/' },
-  { label: 'Forum 2026', href: 'forum/2026/' },
+  { label: 'Forum', href: 'forum/' },
   { label: 'Schmidt AI in Science Fellows', href: 'fellows/' },
   { label: 'Opportunities', href: 'opportunities/' },
   { label: 'Resources', href: 'resources/' },
@@ -58,7 +58,7 @@ function isActive(href: string): boolean {
 
     <div class="header-actions">
       <a class="search-link" href={withBase('search/')} aria-label="Search the site"><Icon name="search" size={19}/></a>
-      <a class="button button-small button-gold desktop-cta" href={withBase('forum/2026/participate/')}>Get updates</a>
+      <a class="button button-small button-gold desktop-cta" href={withBase('forum/participate/')}>Get updates</a>
       <button class="menu-button" type="button" aria-expanded="false" aria-controls="mobile-navigation" data-menu-button>
         <span class="sr-only">Open navigation</span>
         <span data-menu-open><Icon name="menu" size={23}/></span>
@@ -74,7 +74,7 @@ function isActive(href: string): boolean {
           <li><a href={withBase(item.href)} aria-current={isActive(item.href) ? 'page' : undefined}>{item.label}<Icon name="chevron-right" size={18}/></a></li>
         ))}
       </ul>
-      <a class="button button-gold button-full" href={withBase('forum/2026/participate/')}>Get Forum updates <Icon name="arrow-right" size={18}/></a>
+      <a class="button button-gold button-full" href={withBase('forum/participate/')}>Get Forum updates <Icon name="arrow-right" size={18}/></a>
     </div>
   </nav>
 </header>

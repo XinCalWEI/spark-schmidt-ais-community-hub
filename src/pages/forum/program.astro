@@ -1,20 +1,21 @@
 ---
 import { getCollection } from 'astro:content';
-import BaseLayout from '../../../layouts/BaseLayout.astro';
-import CTASection from '../../../components/CTASection.astro';
-import ForumSubnav from '../../../components/ForumSubnav.astro';
-import Icon from '../../../components/Icon.astro';
-import PageHero from '../../../components/PageHero.astro';
-import ProgramDayDialog from '../../../components/ProgramDayDialog.astro';
-import StatusBadge from '../../../components/StatusBadge.astro';
-import { withBase } from '../../../lib/urls';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import CTASection from '../../components/CTASection.astro';
+import ForumSubnav from '../../components/ForumSubnav.astro';
+import Icon from '../../components/Icon.astro';
+import PageHero from '../../components/PageHero.astro';
+import ProgramDayDialog from '../../components/ProgramDayDialog.astro';
+import StatusBadge from '../../components/StatusBadge.astro';
+import { forumFacts } from '../../data/site';
+import { withBase } from '../../lib/urls';
 
 const sessions = (await getCollection('sessions', ({ data }) => !data.draft)).sort((a,b) => a.data.order - b.data.order);
-const dayNames: Record<number,string> = {0:'Arrival evening',1:'Frame',2:'Explore',3:'Build skills',4:'Prototype',5:'Reflect'};
+const dayNames: Record<number,string> = {0:'Check-in day',1:'Frame',2:'Explore',3:'Build skills',4:'Prototype',5:'Reflect'};
 ---
 
-<BaseLayout title="Program Preview — Forum 2026" description="Illustrative program structure for the SPARK Forum 2026.">
-  <PageHero eyebrow="Forum 2026 · Program" title="A connected journey from framing to action." description="This illustrative structure shows the intended learning arc. Topics, timing, session formats, and sequence remain subject to change." status="illustrative" compact />
+<BaseLayout title="Program Preview — Forum" description={`SPARK Forum program preview — ${forumFacts.dateLabel}. ${forumFacts.scheduleNote}`}>
+  <PageHero eyebrow="Forum · Program" title="A connected journey from framing to action." description={`${forumFacts.dateLabel}. ${forumFacts.scheduleNote} Topics, timing, session formats, and sequence remain subject to change.`} status="illustrative" compact />
   <ForumSubnav />
   <section class="section section-white">
     <div class="container">
@@ -22,7 +23,7 @@ const dayNames: Record<number,string> = {0:'Arrival evening',1:'Frame',2:'Explor
       <div class="agenda mt-3">
         {sessions.map((session, index) => (
           <article class="agenda-day" id={`day-${session.data.day}`}>
-            <h2 class="agenda-label"><span class="agenda-day-number">{session.data.day === 0 ? 'Arrival evening' : `Day ${session.data.day}`}</span>{session.data.day !== 0 && <span class="agenda-day-name">{dayNames[session.data.day]}</span>}</h2>
+            <h2 class="agenda-label"><span class="agenda-day-number">{session.data.day === 0 ? 'Check-in day' : `Day ${session.data.day}`}</span>{session.data.day !== 0 && <span class="agenda-day-name">{dayNames[session.data.day]}</span>}</h2>
             <div class="agenda-session">
               <span class="agenda-number">{String(index + 1).padStart(2,'0')}</span>
               <div>
@@ -37,12 +38,12 @@ const dayNames: Record<number,string> = {0:'Arrival evening',1:'Frame',2:'Explor
                     data-program-dialog-open={`program-day-${session.id}`}
                   >
                     View day details
-                    <span class="sr-only"> for {session.data.day === 0 ? 'arrival evening' : `Day ${session.data.day}`}: {session.data.title}</span>
+                    <span class="sr-only"> for {session.data.day === 0 ? 'check-in day' : `Day ${session.data.day}`}: {session.data.title}</span>
                     <Icon name="arrow-right" size={17} />
                   </button>
                 </div>
                 <p>{session.data.summary}</p>
-                <div class="agenda-meta"><StatusBadge status={session.data.status}/><span class="tag">{session.data.format.replace('-', ' ')}</span>{session.data.tags.map(tag => <span class="tag">{tag}</span>)}</div>
+                <div class="agenda-meta"><StatusBadge status={session.data.status}/><span class="tag">{session.data.day === 0 ? 'check-in' : session.data.format.replace('-', ' ')}</span>{session.data.tags.map(tag => <span class="tag">{tag}</span>)}</div>
               </div>
             </div>
             <ProgramDayDialog session={session} dialogId={`program-day-${session.id}`} />
@@ -51,7 +52,7 @@ const dayNames: Record<number,string> = {0:'Arrival evening',1:'Frame',2:'Explor
       </div>
     </div>
   </section>
-  <section class="section"><div class="container"><CTASection eyebrow="Help us prepare" title="Different backgrounds are part of the design." description="A future pre-event survey will help the organizing team understand participants' technical experience, interests, learning goals, and access needs."><a class="button button-gold" href={withBase('forum/2026/participate/')}>Participation updates <Icon name="arrow-right" size={18}/></a></CTASection></div></section>
+  <section class="section"><div class="container"><CTASection eyebrow="Help us prepare" title="Different backgrounds are part of the design." description="A future pre-event survey will help the organizing team understand participants' technical experience, interests, learning goals, and access needs."><a class="button button-gold" href={withBase('forum/participate/')}>Participation updates <Icon name="arrow-right" size={18}/></a></CTASection></div></section>
 </BaseLayout>
 
 <script>

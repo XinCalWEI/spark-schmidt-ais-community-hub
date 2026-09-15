@@ -2,20 +2,20 @@
 import { withBase } from '../lib/urls';
 
 const links = [
-  ['Overview', 'forum/2026/'],
-  ['Program', 'forum/2026/program/'],
-  ['Speakers', 'forum/2026/speakers/'],
-  ['Projects', 'forum/2026/projects/'],
-  ['Participate', 'forum/2026/participate/'],
-  ['Travel & access', 'forum/2026/travel-accessibility/'],
-  ['FAQ', 'forum/2026/faq/'],
+  ['Overview', 'forum/'],
+  ['Program', 'forum/program/'],
+  ['Speakers', 'forum/speakers/'],
+  ['Projects', 'forum/projects/'],
+  ['Participate', 'forum/participate/'],
+  ['Travel & access', 'forum/travel-accessibility/'],
+  ['FAQ', 'forum/faq/'],
 ];
 
 const normalizePath = (path: string) => path.endsWith('/') ? path : `${path}/`;
 const currentPath = normalizePath(Astro.url.pathname);
 ---
 
-<nav class="forum-subnav" aria-label="Forum 2026 sections">
+<nav class="forum-subnav" aria-label="Forum sections">
   <div class="container" data-forum-subnav-scroll>
     <ul>
       {links.map(([label, href]) => {

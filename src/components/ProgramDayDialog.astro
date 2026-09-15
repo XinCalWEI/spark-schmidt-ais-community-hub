@@ -12,10 +12,10 @@ const { session, dialogId } = Astro.props;
 const { data } = session;
 const titleId = `${dialogId}-title`;
 const summaryId = `${dialogId}-summary`;
-const dayLabel = data.day === 0 ? 'Arrival evening' : `Day ${data.day}`;
+const dayLabel = data.day === 0 ? 'Check-in day' : `Day ${data.day}`;
 
 const kindLabels: Record<(typeof data.schedule)[number]['kind'], string> = {
-  arrival: 'Arrival',
+  arrival: 'Check-in',
   meal: 'Meal',
   session: 'Session',
   break: 'Break',

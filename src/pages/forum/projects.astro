@@ -1,11 +1,11 @@
 ---
-import BaseLayout from '../../../layouts/BaseLayout.astro';
-import CTASection from '../../../components/CTASection.astro';
-import ForumSubnav from '../../../components/ForumSubnav.astro';
-import Icon from '../../../components/Icon.astro';
-import PageHero from '../../../components/PageHero.astro';
-import SectionHeading from '../../../components/SectionHeading.astro';
-import { withBase } from '../../../lib/urls';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import CTASection from '../../components/CTASection.astro';
+import ForumSubnav from '../../components/ForumSubnav.astro';
+import Icon from '../../components/Icon.astro';
+import PageHero from '../../components/PageHero.astro';
+import SectionHeading from '../../components/SectionHeading.astro';
+import { withBase } from '../../lib/urls';
 
 const examples = [
   ['Public-service information access', 'Explore how AI-assisted interfaces might improve access to public information while addressing accuracy, accountability, accessibility, and maintenance.'],
@@ -15,8 +15,8 @@ const examples = [
 ];
 ---
 
-<BaseLayout title="Collaborative Projects — Forum 2026" description="The SPARK Forum collaborative project model and illustrative project areas.">
-  <PageHero eyebrow="Forum 2026 · Projects" title="Learn the pathway—not just the pitch." description="Interdisciplinary teams will work from stakeholder needs and responsible problem framing toward a realistic minimum viable prototype, research artifact, project plan, or other concrete deliverable." status="illustrative" compact />
+<BaseLayout title="Collaborative Projects — Forum" description="The SPARK Forum collaborative project model and illustrative project areas.">
+  <PageHero eyebrow="Forum · Projects" title="Learn the pathway—not just the pitch." description="Interdisciplinary teams will work from stakeholder needs and responsible problem framing toward a realistic minimum viable prototype, research artifact, project plan, or other concrete deliverable." status="illustrative" compact />
   <ForumSubnav />
   <section class="section section-white"><div class="container"><SectionHeading eyebrow="Project philosophy" title="Supported prototyping, not a competition." description="One day cannot produce a finished real-world system. The project experience is designed to expose the decisions, collaboration, documentation, and tradeoffs involved in moving from an idea toward responsible implementation."/><div class="project-principles"><article><span>1</span><h3>Start with people and decisions</h3><p>Identify whose needs are involved, what decision the work could support, and how success should be evaluated.</p></article><article><span>2</span><h3>Use realistic scope</h3><p>A useful artifact might be a prototype, technical plan, data audit, interface concept, or evaluation framework.</p></article><article><span>3</span><h3>Document the pathway</h3><p>Record assumptions, risks, evidence gaps, partner roles, and realistic next steps—not only the final demo.</p></article></div></div></section>
   <section class="section"><div class="container"><SectionHeading eyebrow="Illustrative areas" title="Starting points, not confirmed projects." description="Participants may propose their own topics. The organizing team may also prepare project frames for groups that prefer a ready-made starting point."/><div class="card-grid card-grid-2">{examples.map(([title,text],i)=><article class="icon-card"><span class="icon-card-icon"><Icon name={i%2===0?'globe':'layers'} size={22}/></span><h3>{title}</h3><p>{text}</p><span class="tag mt-1">Concept under development</span></article>)}</div></div></section>

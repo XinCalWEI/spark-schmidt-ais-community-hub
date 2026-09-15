@@ -5,6 +5,15 @@ import { chromium } from 'playwright-core';
 const baseUrl = (process.env.QA_URL ?? 'http://127.0.0.1:4321/spark-schmidt-ais-community-hub/').replace(/\/?$/, '/');
 const expectedBasePath = new URL(baseUrl).pathname;
 const aboutUrl = new URL('about/', baseUrl).href;
+const forumPages = [
+  ['forum/', 'Overview'],
+  ['forum/program/', 'Program'],
+  ['forum/speakers/', 'Speakers'],
+  ['forum/projects/', 'Projects'],
+  ['forum/participate/', 'Participate'],
+  ['forum/travel-accessibility/', 'Travel & access'],
+  ['forum/faq/', 'FAQ'],
+];
 const browserCandidates = [
   process.env.CHROME_PATH,
   '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
@@ -23,7 +32,13 @@ const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
 const browserErrors = [];
 
 page.on('console', (message) => {
-  if (message.type() === 'error') browserErrors.push(`console: ${message.text()}`);
+  if (message.type() !== 'error') return;
+  const sourceUrl = message.location().url;
+  // Chrome may request the host's default icon during a static redirect. On
+  // project Pages that URL belongs to the host site, outside this project.
+  // Check the project's explicitly declared favicon below instead.
+  if (expectedBasePath !== '/' && sourceUrl === new URL('/favicon.ico', baseUrl).href && /status of 404/.test(message.text())) return;
+  browserErrors.push(`console: ${message.text()} (${sourceUrl})`);
 });
 page.on('pageerror', (error) => browserErrors.push(`page: ${error.message}`));
 page.on('requestfailed', (request) => {
@@ -36,6 +51,9 @@ try {
   await page.locator('h1').waitFor();
   assert.match(await page.locator('h1').innerText(), /move AI research beyond the paper/i);
   assert.equal(page.url(), aboutUrl, 'The site root should redirect to About SPARK.');
+  const faviconHref = await page.locator('link[rel="icon"]').getAttribute('href');
+  assert.equal(faviconHref, `${expectedBasePath}favicon.svg`, 'The site icon should retain the project base path.');
+  assert.ok((await page.request.get(new URL(faviconHref, baseUrl).href)).ok(), 'The declared site icon should load successfully.');
   assert.equal(await page.locator('.brand-header').getAttribute('href'), `${expectedBasePath}about/`, 'The header logo should link directly to About.');
   assert.equal(await page.locator('.brand-header').getAttribute('aria-label'), 'About SPARK');
   assert.deepEqual(
@@ -61,12 +79,12 @@ try {
   await page.evaluate(() => window.scrollTo(0, 0));
   await page.emulateMedia({ reducedMotion: 'no-preference' });
   assert.equal(await page.locator('.forum-feature-journey li').count(), 5, 'About should show the five core program days.');
-  assert.equal(await page.locator('.forum-arrival').count(), 1, 'Arrival evening should be shown as a prelude, not a sixth program day.');
+  assert.equal(await page.locator('.forum-arrival').count(), 1, 'Check-in day should be shown as a prelude, not a sixth program day.');
   assert.deepEqual(
     await page.locator('.forum-feature-journey li').allInnerTexts(),
     ['01\nDAY 1\nFrame real-world impact', '02\nDAY 2\nExplore emerging methods', '03\nDAY 3\nBuild practical skills', '04\nDAY 4\nPrototype together', '05\nDAY 5\nShare & continue'],
   );
-  assert.doesNotMatch(await page.locator('.forum-feature-panel').innerText(), /six days|day 0/i, 'About should not frame arrival evening as a sixth program day.');
+  assert.doesNotMatch(await page.locator('.forum-feature-panel').innerText(), /six days|day 0/i, 'About should not frame check-in day as a sixth program day.');
   if (process.env.QA_ABOUT_FORUM_MOBILE_SCREENSHOT) {
     const screenshotStyle = await page.addStyleTag({ content: '.site-header { position: static !important; }' });
     await page.locator('.forum-feature-panel').screenshot({ path: process.env.QA_ABOUT_FORUM_MOBILE_SCREENSHOT });
@@ -91,11 +109,15 @@ try {
   assert.equal(await menuButton.getAttribute('aria-expanded'), 'true');
   assert.ok(await mobileNav.isVisible(), 'Mobile navigation should be visible after opening.');
   assert.ok(await mobileNav.getByRole('link', { name: 'Schmidt AI in Science Fellows' }).isVisible(), 'The Fellows link should be available in the menu.');
+  const mobileForumLink = mobileNav.getByRole('link', { name: 'Forum', exact: true });
+  assert.ok(await mobileForumLink.isVisible(), 'Mobile navigation should label the Forum without a year.');
+  assert.equal(await mobileForumLink.getAttribute('href'), `${expectedBasePath}forum/`);
+  assert.equal(await mobileForumLink.getAttribute('aria-current'), null, 'Forum should not be marked current on About.');
   await page.keyboard.press('Escape');
   assert.equal(await menuButton.getAttribute('aria-expanded'), 'false');
   assert.ok(await menuButton.evaluate((element) => element === document.activeElement), 'Focus should return to the menu button.');
 
-  for (const path of ['fellows/', 'forum/2026/']) {
+  for (const path of ['fellows/', 'forum/']) {
     await page.goto(`${baseUrl}${path}`, { waitUntil: 'networkidle' });
     await page.locator('h1').waitFor();
     const pageOverflow = await page.evaluate(() => ({
@@ -107,7 +129,12 @@ try {
   await page.locator('.brand-header').click();
   await page.waitForURL(aboutUrl);
   assert.match(await page.locator('h1').innerText(), /move AI research beyond the paper/i, 'Clicking the header logo should open About SPARK.');
-  await page.goto(`${baseUrl}forum/2026/faq/`, { waitUntil: 'networkidle' });
+  await page.goto(`${baseUrl}forum/faq/`, { waitUntil: 'networkidle' });
+  await menuButton.click();
+  assert.ok(await mobileForumLink.isVisible(), 'The yearless Forum navigation item should remain visible on Forum subpages.');
+  assert.equal(await mobileForumLink.getAttribute('aria-current'), 'page', 'Forum should be active in mobile navigation on its subpages.');
+  assert.equal(await mobileNav.locator('[aria-current="page"]').count(), 1, 'Mobile navigation should have exactly one current item.');
+  await page.keyboard.press('Escape');
   await page.waitForTimeout(100);
   const mobileForumTabVisibility = await page.locator('.forum-subnav [aria-current="page"]').evaluate((element) => {
     const tab = element.getBoundingClientRect();
@@ -116,9 +143,9 @@ try {
   });
   assert.ok(mobileForumTabVisibility, 'The current Forum tab should scroll into view on mobile.');
 
-  await page.goto(`${baseUrl}forum/2026/program/`, { waitUntil: 'networkidle' });
+  await page.goto(`${baseUrl}forum/program/`, { waitUntil: 'networkidle' });
   const mobileDayButtons = page.locator('[data-program-dialog-open]');
-  assert.equal(await mobileDayButtons.count(), 6, 'The Program should expose one details button for arrival evening and each of Days 1 through 5.');
+  assert.equal(await mobileDayButtons.count(), 6, 'The Program should expose one details button for check-in day and each of Days 1 through 5.');
   const controlledDialogs = await mobileDayButtons.evaluateAll((buttons) => buttons.map((button) => ({
     id: button.getAttribute('aria-controls'),
     exists: Boolean(document.getElementById(button.getAttribute('aria-controls') ?? '')),
@@ -129,9 +156,10 @@ try {
   const dayZeroButton = mobileDayButtons.first();
   await dayZeroButton.click();
   const dayZeroDialog = page.locator('#program-day-day-0-arrivals');
-  assert.ok(await dayZeroDialog.evaluate((dialog) => dialog instanceof HTMLDialogElement && dialog.open), 'The arrival evening dialog should open.');
+  assert.ok(await dayZeroDialog.evaluate((dialog) => dialog instanceof HTMLDialogElement && dialog.open), 'The check-in day dialog should open.');
   assert.ok(await dayZeroDialog.locator('[data-dialog-title]').evaluate((title) => title === document.activeElement), 'Focus should move to the dialog heading.');
-  assert.match(await dayZeroDialog.innerText(), /6:00 PM–8:00 PM/);
+  assert.match(await dayZeroDialog.innerText(), /Check-in time to be confirmed/);
+  assert.doesNotMatch(await dayZeroDialog.innerText(), /reception|6:00 PM–8:00 PM/i);
   const mobileDialogBounds = await dayZeroDialog.boundingBox();
   assert.ok(mobileDialogBounds && mobileDialogBounds.x >= 0 && mobileDialogBounds.x + mobileDialogBounds.width <= 391, `Program dialog should fit the 390px viewport: ${JSON.stringify(mobileDialogBounds)}`);
   await page.keyboard.press('Escape');
@@ -172,6 +200,24 @@ try {
     (await page.locator('[data-search-results] a').first().getAttribute('href'))?.startsWith(expectedBasePath),
     `Search results should retain the configured base path (${expectedBasePath}).`,
   );
+
+  await page.goto(`${baseUrl}search/?q=SPARK`, { waitUntil: 'networkidle' });
+  await page.waitForFunction(
+    () => /^\d+ results? for/.test(document.querySelector('[data-search-status]')?.textContent ?? ''),
+    undefined,
+    { timeout: 10_000 },
+  );
+  const sparkSearchResults = await page.locator('[data-search-results] h2 a').evaluateAll((links) => links.map((link) => ({
+    title: link.textContent ?? '',
+    url: link.href,
+  })));
+  assert.ok(sparkSearchResults.length > 0, 'Pagefind should return results for SPARK.');
+  for (const result of sparkSearchResults) {
+    assert.doesNotMatch(result.title, /(?:SPARK\s+)?Forum\s+2026/i, `Search should not show an outdated Forum title: ${result.title}`);
+    const resultPath = new URL(result.url).pathname;
+    assert.ok(resultPath.startsWith(expectedBasePath), `SPARK search results should retain the base path: ${result.url}`);
+    assert.doesNotMatch(resultPath, /\/forum\/2026(?:\/|$)|\/events\/spark-forum-2026(?:\/|$)/, `Search should use canonical yearless Forum routes: ${result.url}`);
+  }
 
   await page.goto(`${baseUrl}opportunities/`, { waitUntil: 'networkidle' });
   assert.equal(await page.locator('[data-filter-card]').count(), 1, 'The opportunity board should include the Round 4 example.');
@@ -244,11 +290,11 @@ try {
     ['Xin Wei', 'Shanshan Liu', 'Paige Bowling', 'Christin Salley', 'Nathan Fox', 'Eliot Miller'],
   );
   assert.equal(await desktopPage.locator('.hero-convener-link').getAttribute('href'), '#people-behind-spark');
-  assert.ok(await desktopPage.getByRole('link', { name: 'Explore Forum 2026' }).isVisible(), 'The About page should link to the Forum 2026 overview.');
-  assert.ok(await desktopPage.getByRole('link', { name: 'Preview the program' }).isVisible(), 'The About page should link to the Forum 2026 program.');
+  assert.ok(await desktopPage.getByRole('link', { name: 'Explore the Forum' }).isVisible(), 'The About page should link to the Forum overview.');
+  assert.ok(await desktopPage.getByRole('link', { name: 'Preview the program' }).isVisible(), 'The About page should link to the Forum program.');
   assert.equal(await desktopPage.locator('.forum-feature-journey li').count(), 5);
   assert.equal(await desktopPage.locator('.forum-arrival').count(), 1);
-  assert.equal(await desktopPage.locator('#forum-feature-title').count(), 1, 'About should contain one Forum 2026 feature title.');
+  assert.equal(await desktopPage.locator('#forum-feature-title').count(), 1, 'About should contain one Forum feature title.');
   assert.equal(await desktopPage.locator('.brand-footer').getAttribute('href'), `${expectedBasePath}about/`, 'The footer brand should link directly to About.');
   const specialThanks = desktopPage.locator('.special-thanks');
   assert.equal(await specialThanks.getByRole('link', { name: 'Visit the Schmidt Sciences website (opens in a new tab)' }).count(), 1);
@@ -296,7 +342,7 @@ try {
   }));
   assert.ok(tabletOverflow.documentWidth <= tabletOverflow.viewportWidth + 1, `About page overflows at 900px: ${JSON.stringify(tabletOverflow)}`);
   assert.equal(await tabletPage.locator('.forum-feature-journey li').count(), 5, 'The tablet layout should preserve the five core program days.');
-  assert.equal(await tabletPage.locator('.forum-arrival').count(), 1, 'The tablet layout should keep arrival evening visually separate.');
+  assert.equal(await tabletPage.locator('.forum-arrival').count(), 1, 'The tablet layout should keep check-in day visually separate.');
   const tabletHeroCard = await tabletPage.locator('.hero-funding-card').boundingBox();
   assert.ok(tabletHeroCard && tabletHeroCard.x >= 0 && tabletHeroCard.x + tabletHeroCard.width <= 901, `The About funding card should fit the 900px viewport: ${JSON.stringify(tabletHeroCard)}`);
   if (process.env.QA_ABOUT_HERO_TABLET_SCREENSHOT) {
@@ -333,16 +379,16 @@ try {
   }
   await desktopPage.goto(`${baseUrl}fellows/`, { waitUntil: 'networkidle' });
   assert.match(await desktopPage.locator('h1').innerText(), /Schmidt AI in Science Fellows/);
-  for (const [path, label] of [
-    ['forum/2026/', 'Overview'],
-    ['forum/2026/program/', 'Program'],
-    ['forum/2026/speakers/', 'Speakers'],
-    ['forum/2026/projects/', 'Projects'],
-    ['forum/2026/participate/', 'Participate'],
-    ['forum/2026/travel-accessibility/', 'Travel & access'],
-    ['forum/2026/faq/', 'FAQ'],
-  ]) {
+  for (const [path, label] of forumPages) {
     await desktopPage.goto(`${baseUrl}${path}`, { waitUntil: 'networkidle' });
+    const primaryNavigation = desktopPage.getByRole('navigation', { name: 'Primary navigation' });
+    const desktopForumLink = primaryNavigation.getByRole('link', { name: 'Forum', exact: true });
+    assert.ok(await desktopForumLink.isVisible(), 'Desktop navigation should label the Forum without a year.');
+    assert.equal(await desktopForumLink.getAttribute('href'), `${expectedBasePath}forum/`);
+    assert.equal(await desktopForumLink.getAttribute('aria-current'), 'page', `${path} should keep Forum active in desktop navigation.`);
+    assert.equal(await primaryNavigation.locator('[aria-current="page"]').count(), 1, 'Desktop navigation should have exactly one current item.');
+    assert.doesNotMatch(await desktopPage.title(), /(?:SPARK\s+)?Forum\s+2026/i, `${path} should have a yearless page title.`);
+    assert.doesNotMatch(await desktopPage.locator('main').innerText(), /(?:SPARK\s+)?Forum\s+2026/i, `${path} should not use the outdated Forum name.`);
     const currentSubpage = desktopPage.locator('.forum-subnav [aria-current="page"]');
     assert.equal(await currentSubpage.count(), 1, `${path} should have exactly one current Forum tab.`);
     assert.equal((await currentSubpage.innerText()).trim(), label);
@@ -352,15 +398,15 @@ try {
     });
     assert.notEqual(currentStyle.backgroundColor, 'rgba(0, 0, 0, 0)', `${label} needs a filled current state.`);
     assert.ok(currentStyle.fontSize >= 14, `${label} subnavigation text should be at least 14px.`);
-    if (path === 'forum/2026/program/' && process.env.QA_FORUM_SCREENSHOT) {
+    if (path === 'forum/program/' && process.env.QA_FORUM_SCREENSHOT) {
       await desktopPage.screenshot({ path: process.env.QA_FORUM_SCREENSHOT, fullPage: false });
     }
   }
-  await desktopPage.goto(`${baseUrl}forum/2026/program/`, { waitUntil: 'networkidle' });
+  await desktopPage.goto(`${baseUrl}forum/program/`, { waitUntil: 'networkidle' });
   const desktopDayZeroButton = desktopPage.locator('[data-program-dialog-open]').first();
   await desktopDayZeroButton.click();
   const desktopDayZeroDialog = desktopPage.locator('#program-day-day-0-arrivals');
-  await desktopDayZeroDialog.getByRole('button', { name: 'Close Arrival evening details' }).click();
+  await desktopDayZeroDialog.getByRole('button', { name: 'Close Check-in day details' }).click();
   assert.ok(await desktopDayZeroButton.evaluate((button) => button === document.activeElement), 'The close button should return focus to the day details button.');
   await desktopDayZeroButton.click();
   if (process.env.QA_PROGRAM_DIALOG_SCREENSHOT) {
@@ -369,10 +415,12 @@ try {
   await desktopPage.mouse.click(3, 3);
   assert.ok(await desktopDayZeroDialog.evaluate((dialog) => !dialog.open), 'Clicking the dialog backdrop should close it.');
   assert.ok(await desktopDayZeroButton.evaluate((button) => button === document.activeElement), 'Backdrop close should return focus to the day details button.');
-  await desktopPage.goto(`${baseUrl}forum/2026/`, { waitUntil: 'networkidle' });
+  await desktopPage.goto(`${baseUrl}forum/`, { waitUntil: 'networkidle' });
   const forumFactsText = await desktopPage.locator('.forum-fact-card').innerText();
   assert.match(forumFactsText, /Ann Arbor, Michigan/);
-  assert.match(forumFactsText, /Late 2026 or early 2027/);
+  assert.match(forumFactsText, /March 7–12, 2027 \(tentative\)/);
+  assert.match(forumFactsText, /March 7: participant check-in only\. March 8–12: main program\./);
+  assert.match(forumFactsText, /Not yet open — stay tuned\./);
   assert.doesNotMatch(forumFactsText, /To be confirmed/i);
   assert.equal(await desktopPage.getByRole('heading', { name: 'Four connected layers—from shared understanding to practical action.' }).count(), 1, 'Forum Overview should contain one canonical Program model.');
   assert.equal(await desktopPage.locator('.forum-layer-list article').count(), 4, 'The Program model should contain four layers.');
@@ -382,7 +430,21 @@ try {
     await desktopPage.screenshot({ path: process.env.QA_FORUM_OVERVIEW_SCREENSHOT, fullPage: true });
   }
   await desktopPage.goto(`${baseUrl}events/`, { waitUntil: 'networkidle' });
-  assert.match(await desktopPage.locator('[data-filter-card]').innerText(), /Late 2026 or early 2027/);
+  assert.match(await desktopPage.locator('[data-filter-card]').innerText(), /March 7–12, 2027 \(tentative\)/);
+  for (const [path, label] of forumPages) {
+    const legacyPath = path.replace(/^forum\//, 'forum/2026/');
+    const destination = new URL(path, baseUrl).href;
+    await desktopPage.goto(new URL(legacyPath, baseUrl).href, { waitUntil: 'networkidle' });
+    await desktopPage.waitForURL(destination);
+    assert.equal(desktopPage.url(), destination, `The old ${legacyPath} bookmark should redirect to ${path}.`);
+    assert.equal((await desktopPage.locator('.forum-subnav [aria-current="page"]').innerText()).trim(), label, 'Legacy Forum bookmarks should preserve the selected subpage.');
+  }
+  const eventUrl = new URL('events/spark-forum/', baseUrl).href;
+  await desktopPage.goto(`${baseUrl}events/spark-forum-2026/`, { waitUntil: 'networkidle' });
+  await desktopPage.waitForURL(eventUrl);
+  assert.equal(desktopPage.url(), eventUrl, 'The old event bookmark should redirect to the yearless event route.');
+  assert.equal((await desktopPage.locator('h1').innerText()).trim(), 'SPARK Forum');
+  assert.match(await desktopPage.locator('.detail-facts').innerText(), /March 7–12, 2027 \(tentative\)/);
   for (const width of [1200, 1440]) {
     await desktopPage.setViewportSize({ width, height: 900 });
     await desktopPage.goto(baseUrl, { waitUntil: 'networkidle' });

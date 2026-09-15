@@ -1,22 +1,22 @@
 ---
-import BaseLayout from '../../../layouts/BaseLayout.astro';
-import ForumSubnav from '../../../components/ForumSubnav.astro';
-import Icon from '../../../components/Icon.astro';
-import PageHero from '../../../components/PageHero.astro';
-import SectionHeading from '../../../components/SectionHeading.astro';
-import StatusBadge from '../../../components/StatusBadge.astro';
-import { forumFacts, siteConfig } from '../../../data/site';
-import { withBase } from '../../../lib/urls';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ForumSubnav from '../../components/ForumSubnav.astro';
+import Icon from '../../components/Icon.astro';
+import PageHero from '../../components/PageHero.astro';
+import SectionHeading from '../../components/SectionHeading.astro';
+import StatusBadge from '../../components/StatusBadge.astro';
+import { forumFacts, siteConfig } from '../../data/site';
+import { withBase } from '../../lib/urls';
 ---
 
-<BaseLayout title="Participate — Forum 2026" description="Participation status and intended audience for the SPARK Forum 2026.">
-  <PageHero eyebrow="Forum 2026 · Participate" title="Bring your discipline, questions, and lived research experience." description="SPARK is being designed primarily for current and alumni Schmidt AI in Science Fellows across scientific fields and levels of AI experience." status="not-open" statusLabel="Applications not yet open" compact>
+<BaseLayout title="Participate — Forum" description="Participation status and intended audience for the SPARK Forum.">
+  <PageHero eyebrow="Forum · Participate" title="Bring your discipline, questions, and lived research experience." description="SPARK is being designed primarily for current and alumni Schmidt AI in Science Fellows across scientific fields and levels of AI experience." status={forumFacts.applicationStatus} statusLabel={`Applications: ${forumFacts.applicationStatusLabel}`} compact>
     <div slot="actions" class="page-actions"><a class="button button-gold" href={`mailto:${siteConfig.contactEmail}?subject=SPARK%20Forum%20updates`}>Request updates <Icon name="mail" size={18}/></a></div>
   </PageHero>
   <ForumSubnav />
   <section class="section section-white"><div class="container two-column"><SectionHeading eyebrow="Intended audience" title="Scientific diversity is central to the forum." description="The program is not centered on one discipline, one AI method, or one career path. It is designed to help participants learn from different forms of expertise."/><div class="audience-list"><article><Icon name="people" size={21}/><div><h3>Current Fellows</h3><p>Researchers seeking practical tools, broader collaborations, mentorship, and pathways from scientific work to real-world impact.</p></div></article><article><Icon name="spark" size={21}/><div><h3>Alumni Fellows</h3><p>Community members who can share career experience, domain knowledge, relationships, and lessons from different sectors.</p></div></article><article><Icon name="globe" size={21}/><div><h3>Cross-sector contributors</h3><p>Selected collaborators who can bring real needs, institutional context, implementation experience, and partnership opportunities.</p></div></article></div></div></section>
   <section class="section"><div class="container"><SectionHeading eyebrow="What we expect to ask" title="Application details will be announced after the program is finalized." description="The following categories illustrate the information likely needed to create a balanced and useful cohort; they are not an open application form."/><div class="card-grid"><article class="icon-card"><span class="icon-card-icon"><Icon name="document" size={22}/></span><h3>Your perspective</h3><p>Scientific area, experience with AI, current research, and what research translation means in your setting.</p></article><article class="icon-card"><span class="icon-card-icon"><Icon name="layers" size={22}/></span><h3>Your learning goals</h3><p>Methods, practical skills, collaboration questions, career interests, and the kinds of projects you want to explore.</p></article><article class="icon-card"><span class="icon-card-icon"><Icon name="people" size={22}/></span><h3>Your contribution</h3><p>Knowledge, lived experience, datasets, problems, partnerships, or community perspectives you could bring to the group.</p></article></div></div></section>
-  <section class="section section-white"><div class="container decision-grid"><div><StatusBadge status="not-open"/><h2>What is still being decided</h2><p>The city is confirmed as {forumFacts.locationLabel}, and the current planning window is {forumFacts.dateLabel.toLowerCase()}. Eligibility, cohort size, exact dates, specific venue, travel support, accommodation support, selection criteria, and application deadlines remain to be confirmed.</p></div><div class="notice"><Icon name="spark" size={21}/><p><strong>Please wait for official details.</strong> Do not make travel arrangements or submit sensitive information by email. Applications, mentorship preferences, travel, dietary information, and accessibility requests will use an approved secure form rather than this public repository.</p></div></div></section>
+  <section class="section section-white"><div class="container decision-grid"><div><StatusBadge status={forumFacts.applicationStatus} label={forumFacts.applicationStatusLabel}/><h2>What is still being decided</h2><p>Planned dates: {forumFacts.dateLabel}, in {forumFacts.locationLabel}. {forumFacts.scheduleNote} Dates, eligibility, cohort size, specific venue, travel support, accommodation support, selection criteria, and application deadlines await final confirmation.</p></div><div class="notice"><Icon name="spark" size={21}/><p><strong>Please wait for official details.</strong> Do not make travel arrangements or submit sensitive information by email. Applications, mentorship preferences, travel, dietary information, and accessibility requests will use an approved secure form rather than this public repository.</p></div></div></section>
   <section class="section"><div class="container contact-panel"><div><p class="eyebrow"><span aria-hidden="true"></span>Stay informed</p><h2>Want to hear when details are ready?</h2><p>Until a mailing-list form is approved, you can contact the organizing team. Please send only your name, affiliation, and request for public program updates.</p></div><div><a class="button button-primary" href={`mailto:${siteConfig.contactEmail}?subject=SPARK%20Forum%20updates`}>Email the organizing team <Icon name="mail" size={18}/></a><a class="button button-outline" href={withBase('privacy/')}>How information is handled</a></div></div></section>
 </BaseLayout>
 
