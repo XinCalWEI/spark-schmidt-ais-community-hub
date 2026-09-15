@@ -35,5 +35,5 @@ export const fundingAcknowledgement =
 export const websiteCreator = {
   name: 'Dr. Xin Wei',
   affiliation: 'MIDAS, University of Michigan',
-  profileUrl: 'https://midas.umich.edu/directory/xin-wei/',
+  profileUrl: 'https://xincalwei.github.io/',
 };
