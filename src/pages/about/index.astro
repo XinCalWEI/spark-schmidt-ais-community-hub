@@ -112,20 +112,22 @@ const specialThanksGroups = [
     <div class="container forum-feature-panel">
       <div class="forum-feature-masthead">
         <p class="eyebrow eyebrow-light"><span aria-hidden="true"></span>{forumFacts.title}</p>
-        <span class="forum-planning-status"><span aria-hidden="true"></span>Planning in progress</span>
+        <span class="forum-planning-status"><span aria-hidden="true"></span>Program in development</span>
         <h2 id="forum-feature-title">{forumFacts.subtitle}</h2>
       </div>
       <div class="forum-feature-overview">
         <p>SPARK will bring current and alumni Schmidt AI in Science Fellows together with cross-sector collaborators to explore how research moves into practice—through shared problem framing, emerging AI methods, hands-on skills, small-group projects, mentorship, and reflection.</p>
         <div class="forum-feature-actions">
-          <a class="button button-gold" href={withBase('forum/')}>Explore the Forum <Icon name="arrow-right" size={18} /></a>
+          <a class="button button-gold" href={forumFacts.applicationUrl} target="_blank" rel="noopener noreferrer" aria-label="Apply to the Forum via Google Forms (opens in a new tab)">Apply to the Forum <Icon name="external" size={18} /></a>
+          <a class="button button-outline-light" href={withBase('forum/')}>Explore the Forum <Icon name="arrow-right" size={18} /></a>
           <a class="button button-outline-light" href={withBase('forum/program/')}>Preview the program</a>
+          <p class="forum-feature-deadline">Application deadline: <time datetime={forumFacts.applicationDeadline}>{forumFacts.applicationDeadlineLabel}</time></p>
         </div>
       </div>
 
       <dl class="forum-feature-facts">
         <div><dt>Location</dt><dd>{forumFacts.locationLabel}</dd></div>
-        <div><dt>Dates</dt><dd>{forumFacts.dateLabel}</dd></div>
+        <div><dt>Forum dates</dt><dd>{forumFacts.dateLabel}</dd></div>
         <div><dt>Status</dt><dd>Program in development</dd></div>
       </dl>
 
@@ -298,7 +300,8 @@ const specialThanksGroups = [
   .forum-planning-status > span { width: .45rem; height: .45rem; border-radius: 50%; background: var(--gold-400); }
   .forum-feature-overview { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 1.35fr) auto; align-items: end; gap: 2rem; margin-top: clamp(1.6rem, 3vw, 2.4rem); }
   .forum-feature-overview > p { max-width: 75ch; color: #c9d7de; font-size: clamp(.98rem, 1.3vw, 1.08rem); line-height: 1.75; }
-  .forum-feature-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: .65rem; }
+  .forum-feature-actions { display: flex; flex-direction: column; width: 20rem; max-width: 100%; gap: .65rem; }
+  .forum-feature-deadline { color: var(--gold-200); font-size: .8rem; line-height: 1.5; text-align: center; }
   .forum-feature-facts { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: clamp(1.7rem, 4vw, 2.7rem); border: 1px solid rgba(255, 255, 255, .15); border-radius: var(--radius); background: rgba(255, 255, 255, .045); }
   .forum-feature-facts div { min-height: 86px; padding: 1.05rem 1.25rem; }
   .forum-feature-facts div + div { border-left: 1px solid rgba(255, 255, 255, .15); }

@@ -1,28 +1,29 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import ForumSubnav from '../../components/ForumSubnav.astro';
+import Icon from '../../components/Icon.astro';
 import PageHero from '../../components/PageHero.astro';
 import { forumFacts, siteConfig } from '../../data/site';
 
 const faqs = [
   ['What is SPARK?', 'SPARK is a community-led forum and resource hub focused on responsible research translation, practical AI research skills, cross-sector collaboration, and long-term connections within the Schmidt AI in Science community.'],
-  ['Who is the forum for?', 'The forum is being designed primarily for current and alumni Schmidt AI in Science Fellows across scientific disciplines and levels of AI experience. Final eligibility and participation details will be announced when applications open.'],
+  ['Who is the forum for?', 'The forum is being designed primarily for current and alumni Schmidt AI in Science Fellows across scientific disciplines and levels of AI experience. Refer to the application form for current eligibility and participation instructions.'],
   ['Do I need advanced AI expertise?', 'No. The four-layer format is designed to welcome participants with different technical backgrounds. Some sessions provide broad conceptual foundations, while others offer hands-on opportunities for participants who want to go deeper.'],
   ['Is SPARK a conference or a hackathon?', 'Neither description fully captures it. SPARK combines a retreat, workshop, community gathering, and collaborative prototyping experience. Project work is intended as a supported learning process rather than a high-pressure competition.'],
   ['What will project teams produce?', 'Teams will work toward a realistic minimum viable prototype, research artifact, project plan, or other concrete deliverable. The goal is to experience the pathway from stakeholder needs and problem framing to responsible implementation—not to produce a finished product in a few days.'],
-  ['When and where will the forum take place?', `Planned dates: ${forumFacts.dateLabel}, in ${forumFacts.locationLabel}. ${forumFacts.scheduleNote} The dates and specific venue await final confirmation. Please wait for confirmation before making travel arrangements.`],
-  ['Are applications open?', `${forumFacts.applicationStatusLabel} Application instructions, eligibility, deadlines, selection criteria, and available participant support will be announced once finalized.`],
+  ['When and where will the forum take place?', `The Forum will take place ${forumFacts.dateLabel}, in ${forumFacts.locationLabel}. These dates are confirmed. ${forumFacts.scheduleNote} The specific venue and travel arrangements are still being finalized. Please wait for those details before booking travel.`],
+  ['Are applications open?', `Yes. The application deadline is ${forumFacts.applicationDeadlineLabel}. Apply through Google Forms using the link below. Google may ask you to sign in. Refer to the form for application instructions.`, forumFacts.applicationUrl],
   ['Will travel and accommodation be supported?', 'Participant support arrangements are still being finalized. Please do not make travel plans until official details are published.'],
   ['Will forum materials be publicly available?', 'Selected tutorials, recordings, project materials, and reports may be shared after appropriate permissions, accessibility review, and licensing checks. Some participant or project information may remain private.'],
-  ['How will personal information be handled?', 'Application, mentorship, travel, dietary, and accessibility information will be collected through approved secure forms. Sensitive personal information will not be stored in the public website repository.'],
+  ['How will personal information be handled?', 'Forum applications are submitted through Google Forms, outside this public website. Other participant information will be handled separately as those workflows become available. Application responses and sensitive personal information are not stored in the public website repository.'],
   ['How can I contribute an opportunity or resource?', 'A reviewed community submission process is under development. In the meantime, the contribute page explains what the hub plans to accept and how to contact the team.'],
 ];
 ---
 
 <BaseLayout title="FAQ — Forum" description="Frequently asked questions and confirmed planning status for the SPARK Forum.">
-  <PageHero eyebrow="Forum · FAQ" title="Clear answers, including what is not decided yet." description="This page distinguishes tentative dates from confirmed logistics. It will be updated as dates, venue, participation, and support arrangements are finalized." status="planning" compact />
+  <PageHero eyebrow="Forum · FAQ" title="Clear answers, including what is not decided yet." description="Find the confirmed Forum dates, application information, and current planning details. Venue, program, and participant support information will be updated as arrangements are finalized." status="planning" compact />
   <ForumSubnav />
-  <section class="section section-white"><div class="narrow faq-list">{faqs.map(([question,answer],index)=><details open={index===0}><summary>{question}<span aria-hidden="true">+</span></summary><div><p>{answer}</p></div></details>)}</div></section>
+  <section class="section section-white"><div class="narrow faq-list">{faqs.map(([question,answer,link],index)=><details open={index===0}><summary>{question}<span aria-hidden="true">+</span></summary><div><p>{answer}</p>{link && <a class="button button-primary button-small mt-1" href={link} target="_blank" rel="noopener noreferrer" aria-label="Open the application in Google Forms (opens in a new tab)">Open the application <Icon name="external" size={16}/></a>}</div></details>)}</div></section>
   <section class="section"><div class="narrow faq-contact"><h2>Still have a question?</h2><p>Contact <a href={`mailto:${siteConfig.contactEmail}`}>{siteConfig.contactEmail}</a>. Please do not email sensitive application, travel, dietary, health, identity, or accessibility information.</p></div></section>
 </BaseLayout>
 

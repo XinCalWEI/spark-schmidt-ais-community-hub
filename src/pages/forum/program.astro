@@ -52,7 +52,7 @@ const dayNames: Record<number,string> = {0:'Check-in day',1:'Frame',2:'Explore',
       </div>
     </div>
   </section>
-  <section class="section"><div class="container"><CTASection eyebrow="Help us prepare" title="Different backgrounds are part of the design." description="A future pre-event survey will help the organizing team understand participants' technical experience, interests, learning goals, and access needs."><a class="button button-gold" href={withBase('forum/participate/')}>Participation updates <Icon name="arrow-right" size={18}/></a></CTASection></div></section>
+  <section class="section"><div class="container"><CTASection eyebrow="Join the Forum" title="Different backgrounds are part of the design." description={`Apply by ${forumFacts.applicationDeadlineLabel}. Tell us what you'd like to learn, discuss, or share at the SPARK Forum. Your input will help shape the agenda.`}><a class="button button-gold" href={forumFacts.applicationUrl} target="_blank" rel="noopener noreferrer" aria-label="Apply now via Google Forms (opens in a new tab)">Apply now <Icon name="external" size={18}/></a><a class="button button-outline-light" href={withBase('forum/participate/')}>Application details</a></CTASection></div></section>
 </BaseLayout>
 
 <script>

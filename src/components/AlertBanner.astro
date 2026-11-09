@@ -1,14 +1,13 @@
 ---
 import Icon from './Icon.astro';
-import { siteConfig } from '../data/site';
-import { withBase } from '../lib/urls';
+import { forumFacts, siteConfig } from '../data/site';
 ---
 
 {siteConfig.status === 'preview' && (
   <aside class="site-alert" aria-label="Website status">
     <div class="container site-alert-inner">
-      <p><strong>Site preview</strong><span aria-hidden="true">—</span> Program, venue, application, and speaker details will be announced as they are confirmed.</p>
-      <a href={withBase('forum/faq/')}>What is confirmed? <Icon name="arrow-right" size={16}/></a>
+      <p><strong>Applications open</strong><span aria-hidden="true">—</span> Apply by <time datetime={forumFacts.applicationDeadline}>{forumFacts.applicationDeadlineLabel}</time>. Program details are being finalized.</p>
+      <a href={forumFacts.applicationUrl} target="_blank" rel="noopener noreferrer" aria-label="Apply now via Google Forms (opens in a new tab)">Apply now <Icon name="external" size={16}/></a>
     </div>
   </aside>
 )}

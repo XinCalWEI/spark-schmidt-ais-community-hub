@@ -24,9 +24,9 @@ const translationPriorities = [
 ---
 
 <BaseLayout title="SPARK Forum" description="A focused forum for responsible research translation, practical AI skills, collaborative prototyping, and community connection.">
-  <PageHero eyebrow="SPARK Forum" title="A retreat for responsible research translation and cross-sector collaboration." description="A focused gathering designed around one connected journey: understand real-world challenges, explore relevant AI methods, learn practical tools, build collaborative prototypes, and reflect on pathways from research to impact." status="planning">
-    <div slot="actions" class="page-actions"><a class="button button-gold" href={withBase('forum/participate/')}>Participation updates <Icon name="arrow-right" size={18}/></a><a class="button button-outline-light" href={withBase('forum/program/')}>View program preview</a></div>
-    <aside slot="aside" class="forum-fact-card"><div><small>Dates</small><strong>{forumFacts.dateLabel}</strong><p class="forum-schedule-note">{forumFacts.scheduleNote}</p></div><div><small>Location</small><strong>{forumFacts.locationLabel}</strong></div><div><small>Applications</small><strong>{forumFacts.applicationStatusLabel}</strong></div></aside>
+  <PageHero eyebrow="SPARK Forum" title="A retreat for responsible research translation and cross-sector collaboration." description="A focused gathering designed around one connected journey: understand real-world challenges, explore relevant AI methods, learn practical tools, build collaborative prototypes, and reflect on pathways from research to impact." status="planning" statusLabel="Program in development">
+    <div slot="actions" class="page-actions"><a class="button button-gold" href={forumFacts.applicationUrl} target="_blank" rel="noopener noreferrer" aria-label="Apply now via Google Forms (opens in a new tab)">Apply now <Icon name="external" size={18}/></a><a class="button button-outline-light" href={withBase('forum/participate/')}>Application details</a><a class="button button-outline-light" href={withBase('forum/program/')}>View program preview</a></div>
+    <aside slot="aside" class="forum-fact-card"><div><small>Forum dates</small><strong>{forumFacts.dateLabel}</strong><p class="forum-schedule-note">{forumFacts.scheduleNote}</p></div><div><small>Location</small><strong>{forumFacts.locationLabel}</strong></div><div><small>Applications</small><strong>{forumFacts.applicationStatusLabel}</strong><p class="forum-schedule-note">Deadline: <time datetime={forumFacts.applicationDeadline}>{forumFacts.applicationDeadlineLabel}</time></p></div></aside>
   </PageHero>
   <ForumSubnav />
 
@@ -77,7 +77,7 @@ const translationPriorities = [
     </div>
   </section>
 
-  <section class="section"><div class="container"><CTASection eyebrow="Forum status" title="Planning is underway." description={`Planned dates: ${forumFacts.dateLabel}, in ${forumFacts.locationLabel}. ${forumFacts.scheduleNote} The dates, specific venue, eligibility, participant support, and speakers will be confirmed before travel arrangements should be made.`}><a class="button button-gold" href={withBase('forum/participate/')}>How to stay informed <Icon name="arrow-right" size={18}/></a><a class="button button-outline-light" href={withBase('forum/faq/')}>Read the FAQ</a></CTASection></div></section>
+  <section class="section"><div class="container"><CTASection eyebrow="Join the Forum" title="Applications are open." description={`Apply through Google Forms by ${forumFacts.applicationDeadlineLabel}. Confirmed Forum dates: ${forumFacts.dateLabel}, in ${forumFacts.locationLabel}. ${forumFacts.scheduleNote} Venue and participant support details will be shared before travel should be booked.`}><a class="button button-gold" href={forumFacts.applicationUrl} target="_blank" rel="noopener noreferrer" aria-label="Open the application in Google Forms (opens in a new tab)">Open the application <Icon name="external" size={18}/></a><a class="button button-outline-light" href={withBase('forum/participate/')}>Application details & QR code</a></CTASection></div></section>
 </BaseLayout>
 
 <style>

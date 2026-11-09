@@ -1,3 +1,7 @@
+import { formatDate } from '../lib/dates';
+
+const applicationDeadline = '2026-12-15';
+
 export const siteConfig = {
   name: 'SPARK Community Hub',
   shortName: 'SPARK',
@@ -6,21 +10,22 @@ export const siteConfig = {
   contactEmail: 'xincwei@umich.edu',
   githubUrl: 'https://github.com/XinCalWEI/spark-schmidt-ais-community-hub',
   status: 'preview' as const,
-  lastUpdated: '2026-09-14',
+  lastUpdated: '2026-11-09',
 };
 
 export const forumFacts = {
   title: 'SPARK Forum',
   subtitle: 'A Retreat for Responsible Research Translation and Cross-Sector Collaboration',
   status: 'planning' as const,
-  dateLabel: 'March 7–12, 2027 (tentative)',
+  dateLabel: 'March 8–12, 2027',
   scheduleNote: 'March 7: participant check-in only. March 8–12: main program.',
-  dateIso: null as string | null,
+  dateIso: '2027-03-08',
   locationLabel: 'Ann Arbor, Michigan',
-  applicationStatus: 'not-open' as const,
-  applicationStatusLabel: 'Not yet open — stay tuned.',
-  applicationDeadline: null as string | null,
-  applicationUrl: null as string | null,
+  applicationStatus: 'open' as const,
+  applicationStatusLabel: 'Open — apply now',
+  applicationDeadline,
+  applicationDeadlineLabel: formatDate(new Date(applicationDeadline), { month: 'long' }),
+  applicationUrl: 'https://docs.google.com/forms/d/e/1FAIpQLSdDVU6HTpwYwOiAV17agLwG-95dQOKpl6_pewkhxAQT-P-rDg/viewform?usp=dialog',
 };
 
 export const affiliationNote =

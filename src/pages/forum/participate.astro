@@ -9,15 +9,108 @@ import { forumFacts, siteConfig } from '../../data/site';
 import { withBase } from '../../lib/urls';
 ---
 
-<BaseLayout title="Participate — Forum" description="Participation status and intended audience for the SPARK Forum.">
-  <PageHero eyebrow="Forum · Participate" title="Bring your discipline, questions, and lived research experience." description="SPARK is being designed primarily for current and alumni Schmidt AI in Science Fellows across scientific fields and levels of AI experience." status={forumFacts.applicationStatus} statusLabel={`Applications: ${forumFacts.applicationStatusLabel}`} compact>
-    <div slot="actions" class="page-actions"><a class="button button-gold" href={`mailto:${siteConfig.contactEmail}?subject=SPARK%20Forum%20updates`}>Request updates <Icon name="mail" size={18}/></a></div>
+<BaseLayout title="Participate — Forum" description="Apply to the SPARK Forum through Google Forms, or scan the application QR code. Explore the intended audience and current planning details.">
+  <PageHero eyebrow="Forum · Participate" title="Bring your discipline, questions, and lived research experience." description="SPARK brings current and alumni Schmidt AI in Science Fellows together across scientific fields and levels of AI experience." status={forumFacts.applicationStatus} statusLabel={`Applications: ${forumFacts.applicationStatusLabel}`} compact>
+    <div slot="actions" class="page-actions">
+      <a class="button button-gold" href={forumFacts.applicationUrl} target="_blank" rel="noopener noreferrer" data-application-link>Apply now <Icon name="external" size={18}/></a>
+      <span class="application-service">Google Forms · opens in a new tab</span>
+    </div>
   </PageHero>
   <ForumSubnav />
-  <section class="section section-white"><div class="container two-column"><SectionHeading eyebrow="Intended audience" title="Scientific diversity is central to the forum." description="The program is not centered on one discipline, one AI method, or one career path. It is designed to help participants learn from different forms of expertise."/><div class="audience-list"><article><Icon name="people" size={21}/><div><h3>Current Fellows</h3><p>Researchers seeking practical tools, broader collaborations, mentorship, and pathways from scientific work to real-world impact.</p></div></article><article><Icon name="spark" size={21}/><div><h3>Alumni Fellows</h3><p>Community members who can share career experience, domain knowledge, relationships, and lessons from different sectors.</p></div></article><article><Icon name="globe" size={21}/><div><h3>Cross-sector contributors</h3><p>Selected collaborators who can bring real needs, institutional context, implementation experience, and partnership opportunities.</p></div></article></div></div></section>
-  <section class="section"><div class="container"><SectionHeading eyebrow="What we expect to ask" title="Application details will be announced after the program is finalized." description="The following categories illustrate the information likely needed to create a balanced and useful cohort; they are not an open application form."/><div class="card-grid"><article class="icon-card"><span class="icon-card-icon"><Icon name="document" size={22}/></span><h3>Your perspective</h3><p>Scientific area, experience with AI, current research, and what research translation means in your setting.</p></article><article class="icon-card"><span class="icon-card-icon"><Icon name="layers" size={22}/></span><h3>Your learning goals</h3><p>Methods, practical skills, collaboration questions, career interests, and the kinds of projects you want to explore.</p></article><article class="icon-card"><span class="icon-card-icon"><Icon name="people" size={22}/></span><h3>Your contribution</h3><p>Knowledge, lived experience, datasets, problems, partnerships, or community perspectives you could bring to the group.</p></article></div></div></section>
-  <section class="section section-white"><div class="container decision-grid"><div><StatusBadge status={forumFacts.applicationStatus} label={forumFacts.applicationStatusLabel}/><h2>What is still being decided</h2><p>Planned dates: {forumFacts.dateLabel}, in {forumFacts.locationLabel}. {forumFacts.scheduleNote} Dates, eligibility, cohort size, specific venue, travel support, accommodation support, selection criteria, and application deadlines await final confirmation.</p></div><div class="notice"><Icon name="spark" size={21}/><p><strong>Please wait for official details.</strong> Do not make travel arrangements or submit sensitive information by email. Applications, mentorship preferences, travel, dietary information, and accessibility requests will use an approved secure form rather than this public repository.</p></div></div></section>
-  <section class="section"><div class="container contact-panel"><div><p class="eyebrow"><span aria-hidden="true"></span>Stay informed</p><h2>Want to hear when details are ready?</h2><p>Until a mailing-list form is approved, you can contact the organizing team. Please send only your name, affiliation, and request for public program updates.</p></div><div><a class="button button-primary" href={`mailto:${siteConfig.contactEmail}?subject=SPARK%20Forum%20updates`}>Email the organizing team <Icon name="mail" size={18}/></a><a class="button button-outline" href={withBase('privacy/')}>How information is handled</a></div></div></section>
+
+  <section class="section section-white" id="apply" aria-labelledby="application-title">
+    <div class="container application-panel">
+      <div class="application-copy">
+        <p class="eyebrow"><span aria-hidden="true"></span>Join the Forum</p>
+        <h2 id="application-title">Your next collaboration could start here.</h2>
+        <p>Use the application form to tell us about your research, what you'd like to share, and what you'd like to see at the SPARK Forum—whether that's specific topics, tools, workshops, or discussions.</p>
+        <p>Your responses will help us refine the agenda around participants' interests and recent developments in AI.</p>
+        <p><strong>Application deadline: <time datetime={forumFacts.applicationDeadline}>{forumFacts.applicationDeadlineLabel}</time></strong></p>
+        <a class="button button-primary" href={forumFacts.applicationUrl} target="_blank" rel="noopener noreferrer" data-application-link>Open application form <Icon name="external" size={18}/></a>
+        <p class="application-help">The form opens in Google Forms. You may be asked to sign in to Google. On your phone, use the button above; on another device, scan the QR code.</p>
+      </div>
+      <figure class="application-qr-card">
+        <a class="application-qr-link" href={forumFacts.applicationUrl} target="_blank" rel="noopener noreferrer" aria-label="Open the SPARK Forum application in Google Forms (opens in a new tab)" data-application-link>
+          <img class="application-qr" src={withBase('images/spark-forum-application-qr.png')} alt="QR code for the SPARK Forum application" width="500" height="500" loading="eager" decoding="async" data-application-qr />
+        </a>
+        <figcaption><strong>Scan to apply</strong><span>SPARK Forum application · Google Forms</span></figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container two-column">
+      <SectionHeading eyebrow="Intended audience" title="Scientific diversity is central to the forum." description="The program is not centered on one discipline, one AI method, or one career path. It is designed to help participants learn from different forms of expertise."/>
+      <div class="audience-list">
+        <article><Icon name="people" size={21}/><div><h3>Current Fellows</h3><p>Researchers seeking practical tools, broader collaborations, mentorship, and pathways from scientific work to real-world impact.</p></div></article>
+        <article><Icon name="spark" size={21}/><div><h3>Alumni Fellows</h3><p>Community members who can share career experience, domain knowledge, relationships, and lessons from different sectors.</p></div></article>
+        <article><Icon name="globe" size={21}/><div><h3>Cross-sector contributors</h3><p>Selected collaborators who can bring real needs, institutional context, implementation experience, and partnership opportunities.</p></div></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-white">
+    <div class="container">
+      <SectionHeading eyebrow="Before you apply" title="Think about what you want to learn—and share." description="These prompts can help you prepare. Use the application form for the actual questions, eligibility information, and submission instructions."/>
+      <div class="card-grid">
+        <article class="icon-card"><span class="icon-card-icon"><Icon name="document" size={22}/></span><h3>Your perspective</h3><p>Scientific area, experience with AI, current research, and what research translation means in your setting.</p></article>
+        <article class="icon-card"><span class="icon-card-icon"><Icon name="layers" size={22}/></span><h3>What you'd like to see</h3><p>Topics, tools, workshops, discussions, or collaborative projects you'd like to see at the SPARK Forum.</p></article>
+        <article class="icon-card"><span class="icon-card-icon"><Icon name="people" size={22}/></span><h3>Your contribution</h3><p>Knowledge, lived experience, datasets, problems, partnerships, or community perspectives you could bring to the group.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container decision-grid">
+      <div>
+        <StatusBadge status={forumFacts.status} label="Event planning"/>
+        <h2>Dates and practical arrangements</h2>
+        <p>Confirmed Forum dates: {forumFacts.dateLabel}, in {forumFacts.locationLabel}. {forumFacts.scheduleNote} The specific venue, travel support, and accommodation arrangements are still being finalized.</p>
+      </div>
+      <div class="notice"><Icon name="spark" size={21}/><p><strong>Apply through the form.</strong> Please use Google Forms for your application and contact the team if you have questions. Wait for confirmed travel and support information before making bookings.</p></div>
+    </div>
+  </section>
+
+  <section class="section section-white">
+    <div class="container contact-panel">
+      <div><p class="eyebrow"><span aria-hidden="true"></span>Questions?</p><h2>Talk with the organizing team.</h2><p>For questions about the Forum or trouble accessing the application, email the team. Please submit your application through the form rather than by email.</p></div>
+      <div><a class="button button-primary" href={`mailto:${siteConfig.contactEmail}?subject=SPARK%20Forum%20application%20question`}>Email the organizing team <Icon name="mail" size={18}/></a><a class="button button-outline" href={withBase('privacy/')}>How information is handled</a></div>
+    </div>
+  </section>
 </BaseLayout>
 
-<style>.two-column{display:grid;grid-template-columns:.85fr 1.15fr;gap:clamp(3rem,8vw,7rem)}.two-column .section-heading{margin:0}.audience-list{display:grid;gap:.8rem}.audience-list article{display:grid;grid-template-columns:2.6rem 1fr;gap:1rem;border:1px solid var(--line);border-radius:var(--radius-sm);padding:1.2rem}.audience-list .icon{color:var(--gold-700)}.audience-list p{margin-top:.4rem;color:var(--slate);font-size:.86rem}.decision-grid{display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:3rem}.decision-grid h2{margin-top:1rem}.decision-grid>div>p{margin-top:.8rem;color:var(--slate)}.contact-panel{display:grid;grid-template-columns:1fr auto;align-items:center;gap:2rem;border-top:1px solid var(--line);padding-top:3rem}.contact-panel h2{margin-top:.6rem}.contact-panel p:not(.eyebrow){margin-top:.75rem;color:var(--slate)}.contact-panel>div:last-child{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:.7rem}@media(max-width:760px){.two-column,.decision-grid,.contact-panel{grid-template-columns:1fr}.contact-panel>div:last-child{justify-content:flex-start}}</style>
+<style>
+  #apply { scroll-margin-top: 6rem; }
+  .application-service { color: #d3dee4; font-size: .82rem; }
+  .application-panel { display: grid; grid-template-columns: minmax(0, 1fr) minmax(15rem, 19rem); align-items: center; gap: clamp(1.5rem, 5vw, 4rem); border: 1px solid var(--line); border-radius: var(--radius); background: linear-gradient(125deg, var(--gold-100), var(--white) 65%); padding: clamp(1.2rem, 4vw, 3rem); }
+  .application-copy h2 { max-width: 21ch; margin-top: .7rem; font-size: clamp(1.8rem, 3vw, 2.6rem); }
+  .application-copy > p:not(.eyebrow) { max-width: 65ch; margin-top: 1rem; color: var(--slate); }
+  .application-copy .button { margin-top: 1.4rem; }
+  .application-copy > .application-help { font-size: .82rem; line-height: 1.65; }
+  .application-qr-card { min-width: 0; margin: 0; border: 1px solid var(--line); border-radius: var(--radius-sm); background: #fff; padding: 1rem; text-align: center; }
+  .application-qr-link { display: block; width: fit-content; max-width: 100%; margin-inline: auto; }
+  .application-qr { display: block; width: 240px; max-width: 100%; height: auto; object-fit: contain; }
+  .application-qr-card figcaption { margin-top: .5rem; }
+  .application-qr-card figcaption strong, .application-qr-card figcaption span { display: block; }
+  .application-qr-card figcaption strong { color: var(--navy-950); font-size: .95rem; }
+  .application-qr-card figcaption span { margin-top: .25rem; color: var(--slate); font-size: .75rem; }
+  .two-column { display: grid; grid-template-columns: .85fr 1.15fr; gap: clamp(3rem, 8vw, 7rem); }
+  .two-column .section-heading { margin: 0; }
+  .audience-list { display: grid; gap: .8rem; }
+  .audience-list article { display: grid; grid-template-columns: 2.6rem 1fr; gap: 1rem; border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 1.2rem; }
+  .audience-list .icon { color: var(--gold-700); }
+  .audience-list p { margin-top: .4rem; color: var(--slate); font-size: .86rem; }
+  .decision-grid { display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 3rem; }
+  .decision-grid h2 { margin-top: 1rem; }
+  .decision-grid > div > p { margin-top: .8rem; color: var(--slate); }
+  .contact-panel { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 2rem; border-top: 1px solid var(--line); padding-top: 3rem; }
+  .contact-panel h2 { margin-top: .6rem; }
+  .contact-panel p:not(.eyebrow) { margin-top: .75rem; color: var(--slate); }
+  .contact-panel > div:last-child { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: .7rem; }
+  @media (max-width: 760px) {
+    .application-panel, .two-column, .decision-grid, .contact-panel { grid-template-columns: 1fr; }
+    .application-qr-card { width: min(100%, 19rem); justify-self: center; }
+    .application-copy .button { width: 100%; }
+    .contact-panel > div:last-child { justify-content: flex-start; }
+  }
+</style>

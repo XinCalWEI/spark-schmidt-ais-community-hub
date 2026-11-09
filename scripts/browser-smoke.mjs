@@ -5,6 +5,7 @@ import { chromium } from 'playwright-core';
 const baseUrl = (process.env.QA_URL ?? 'http://127.0.0.1:4321/spark-schmidt-ais-community-hub/').replace(/\/?$/, '/');
 const expectedBasePath = new URL(baseUrl).pathname;
 const aboutUrl = new URL('about/', baseUrl).href;
+const applicationUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSdDVU6HTpwYwOiAV17agLwG-95dQOKpl6_pewkhxAQT-P-rDg/viewform?usp=dialog';
 const forumPages = [
   ['forum/', 'Overview'],
   ['forum/program/', 'Program'],
@@ -113,6 +114,8 @@ try {
   assert.ok(await mobileForumLink.isVisible(), 'Mobile navigation should label the Forum without a year.');
   assert.equal(await mobileForumLink.getAttribute('href'), `${expectedBasePath}forum/`);
   assert.equal(await mobileForumLink.getAttribute('aria-current'), null, 'Forum should not be marked current on About.');
+  assert.equal(await mobileNav.locator('.button-full').getAttribute('href'), applicationUrl, 'The mobile application button should open the supplied Google Form.');
+  assert.equal(await mobileNav.locator('.button-full').getAttribute('target'), '_blank');
   await page.keyboard.press('Escape');
   assert.equal(await menuButton.getAttribute('aria-expanded'), 'false');
   assert.ok(await menuButton.evaluate((element) => element === document.activeElement), 'Focus should return to the menu button.');
@@ -418,9 +421,9 @@ try {
   await desktopPage.goto(`${baseUrl}forum/`, { waitUntil: 'networkidle' });
   const forumFactsText = await desktopPage.locator('.forum-fact-card').innerText();
   assert.match(forumFactsText, /Ann Arbor, Michigan/);
-  assert.match(forumFactsText, /March 7–12, 2027 \(tentative\)/);
+  assert.match(forumFactsText, /March 8–12, 2027/);
   assert.match(forumFactsText, /March 7: participant check-in only\. March 8–12: main program\./);
-  assert.match(forumFactsText, /Not yet open — stay tuned\./);
+  assert.match(forumFactsText, /Open — apply now/);
   assert.doesNotMatch(forumFactsText, /To be confirmed/i);
   assert.equal(await desktopPage.getByRole('heading', { name: 'Four connected layers—from shared understanding to practical action.' }).count(), 1, 'Forum Overview should contain one canonical Program model.');
   assert.equal(await desktopPage.locator('.forum-layer-list article').count(), 4, 'The Program model should contain four layers.');
@@ -430,7 +433,7 @@ try {
     await desktopPage.screenshot({ path: process.env.QA_FORUM_OVERVIEW_SCREENSHOT, fullPage: true });
   }
   await desktopPage.goto(`${baseUrl}events/`, { waitUntil: 'networkidle' });
-  assert.match(await desktopPage.locator('[data-filter-card]').innerText(), /March 7–12, 2027 \(tentative\)/);
+  assert.match(await desktopPage.locator('[data-filter-card]').innerText(), /March 8–12, 2027/);
   for (const [path, label] of forumPages) {
     const legacyPath = path.replace(/^forum\//, 'forum/2026/');
     const destination = new URL(path, baseUrl).href;
@@ -444,12 +447,39 @@ try {
   await desktopPage.waitForURL(eventUrl);
   assert.equal(desktopPage.url(), eventUrl, 'The old event bookmark should redirect to the yearless event route.');
   assert.equal((await desktopPage.locator('h1').innerText()).trim(), 'SPARK Forum');
-  assert.match(await desktopPage.locator('.detail-facts').innerText(), /March 7–12, 2027 \(tentative\)/);
+  assert.match(await desktopPage.locator('.detail-facts').innerText(), /March 8–12, 2027/);
+  await page.goto(`${baseUrl}forum/participate/`, { waitUntil: 'networkidle' });
+  const applicationQr = page.locator('[data-application-qr]');
+  assert.equal(await applicationQr.getAttribute('src'), `${expectedBasePath}images/spark-forum-application-qr.png`);
+  assert.equal(await applicationQr.locator('..').getAttribute('href'), applicationUrl, 'The QR code should also work as a clickable application link.');
+  assert.ok(await applicationQr.evaluate((img) => img.complete && img.naturalWidth === 500 && img.naturalHeight === 500), 'The original application QR image should load without re-encoding.');
+  assert.doesNotMatch(await page.locator('main').innerText(), /not yet open|stay tuned|not an open application form/i);
+  for (const width of [320, 390]) {
+    await page.setViewportSize({ width, height: 844 });
+    const bounds = await page.evaluate(() => ({ documentWidth: document.documentElement.scrollWidth, viewportWidth: document.documentElement.clientWidth }));
+    assert.ok(bounds.documentWidth <= bounds.viewportWidth + 1, `Application page overflows at ${width}px: ${JSON.stringify(bounds)}`);
+    const qrBounds = await applicationQr.boundingBox();
+    assert.ok(qrBounds && Math.abs(qrBounds.width - qrBounds.height) < 1, 'The application QR must remain square.');
+  }
+  if (process.env.QA_APPLICATION_MOBILE_SCREENSHOT) {
+    await page.locator('#apply').screenshot({ path: process.env.QA_APPLICATION_MOBILE_SCREENSHOT });
+  }
+  for (const path of ['about/', 'forum/', 'forum/program/', 'forum/participate/', 'events/spark-forum/']) {
+    await desktopPage.goto(`${baseUrl}${path}`, { waitUntil: 'networkidle' });
+    const applyLinks = desktopPage.locator(`main a[href="${applicationUrl}"]`);
+    assert.ok(await applyLinks.count() > 0, `${path} should provide a direct application link.`);
+    assert.ok((await applyLinks.evaluateAll((links) => links.every((link) => link.target === '_blank' && link.rel.includes('noopener')))), 'Application links should safely open Google Forms in a new tab.');
+  }
+  await desktopPage.goto(`${baseUrl}forum/participate/`, { waitUntil: 'networkidle' });
+  if (process.env.QA_APPLICATION_SCREENSHOT) {
+    await desktopPage.locator('#apply').screenshot({ path: process.env.QA_APPLICATION_SCREENSHOT });
+  }
   for (const width of [1200, 1440]) {
     await desktopPage.setViewportSize({ width, height: 900 });
     await desktopPage.goto(baseUrl, { waitUntil: 'networkidle' });
     if (width === 1440) {
       assert.ok(await desktopPage.locator('.desktop-cta').isVisible(), 'The primary header action should be visible on a wide desktop.');
+      assert.equal(await desktopPage.locator('.desktop-cta').getAttribute('href'), applicationUrl);
     }
     const headerBounds = await desktopPage.evaluate(() => {
       const brand = document.querySelector('.brand-header')?.getBoundingClientRect();
